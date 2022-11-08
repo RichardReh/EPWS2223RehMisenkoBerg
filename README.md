@@ -11,7 +11,7 @@ Dieses Projekt hat insofern eine gesellschaftliche Relevanz, dass das Arbeiten i
 
 Quellen:
 
-Eigene Erfahrung aus Gruppenarbeiten in der Schule und im Stuidum.
+Eigene Erfahrung aus Gruppenarbeiten in der Schule und im Studium.
 
 http://groups.uni-paderborn.de/psychologie/scha_Gruppen-Teams_Einflussfaktoren%20der%20Gruppenleistung.pdf
 
