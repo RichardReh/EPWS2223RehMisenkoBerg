@@ -9,4 +9,16 @@
 <body>
     <h1>Text</h1>
 </body>
+<script>
+    let clientId = null;
+    let ws = new WebSocket("ws://localhost:8003")
+    ws.onmessage = message => {
+        const response = JSON.parse(message.data);
+        
+        if(response.method === "connect"){
+            clientId = response.clientId;
+            console.log(clientId)
+        }
+    }
+</script>
 </html>
