@@ -55,24 +55,30 @@ wsServer.on("request", request => {
 
         
             session = sessions[sessionId]
-            
-            
-            session.clients.push({
-                "clientId" : clientId,
-                "nutzername" : nutzername
-            })
 
-            console.log(session)
-
-            const payLoad = {
-                "method" : "join",
-                "session" : session
-            }
-
-            session.clients.forEach(c => {
-                clients[c.clientId].connection.send(JSON.stringify(payLoad))
-            });
-
+            if (!sessions[sessionId]) {
+                const errorPayload = {
+                  "method": "error",
+                  "message": "Session does not exist"
+                }
+                clients[clientId].connection.send(JSON.stringify(errorPayload));
+              } else {
+                session.clients.push({
+                    "clientId" : clientId,
+                    "nutzername" : nutzername
+                })
+    
+                console.log(session)
+    
+                const payLoad = {
+                    "method" : "join",
+                    "session" : session
+                }
+    
+                session.clients.forEach(c => {
+                    clients[c.clientId].connection.send(JSON.stringify(payLoad))
+                });
+              }
         }
 
 

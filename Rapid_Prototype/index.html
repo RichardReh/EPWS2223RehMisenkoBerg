@@ -38,7 +38,7 @@
 
     btnJoin.addEventListener("click", e =>{
 
-    if (sessionId === null)
+    
     sessionId = txtSessionId.value
 
     const payLoad = {
@@ -72,6 +72,10 @@
             response.session.clients.forEach(element => {
                 console.log(element.nutzername)
             });   
+        }
+
+        if (response.method === "error"){
+            console.log(response.message) 
         }
 
     }
