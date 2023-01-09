@@ -6,6 +6,8 @@ httpServer.listen(8003, () => console.log("Listening.. on 8003"))
 
 //hashmap für Clients
 const clients = {};
+//hashmap für Sitzungen
+const sessions = {};
 
 const wsServer = new websocketServer({
     "httpServer": httpServer
@@ -18,8 +20,32 @@ wsServer.on("request", request => {
     connection.on("close", () => console.log("closed!"))
     connection.on("message", message => {
         const result = JSON.parse(message.utf8Data)
+       
         //Client Message empfangen
         console.log(result)
+
+
+        //eine Sitzung erstellen mit einer neuen Sitzungs ID
+        if (result.method === "create"){ 
+            const clientId = result.clientId
+            const sessionId = guid()
+            sessions[sessionId] = {
+                "id": sessionId,
+                "clients": []
+            }
+
+            console.log("Neue Session ",sessions[sessionId]);
+
+            const payLoad = {
+                "method": "create",
+                "session": sessions[sessionId]
+            }
+
+            const connection = clients[clientId].connection
+            connection.send(JSON.stringify(payLoad))
+
+        }
+
 
     })
 
