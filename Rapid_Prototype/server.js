@@ -34,6 +34,8 @@ wsServer.on("request", request => {
                 "clients": []
             }
 
+            console.log("Neue Session ",sessions[sessionId]);
+
             const payLoad = {
                 "method": "create",
                 "session": sessions[sessionId]
