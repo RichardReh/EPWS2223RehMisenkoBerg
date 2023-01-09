@@ -9,7 +9,9 @@
 <body>
     <h1>Text</h1>
     <p1><button id = 'btnCreate'>Sitzung erstellen</button></p1><br><br><br>
-    
+    <input type = 'text' placeholder="Nutzername" id = 'txtNameId'>
+    <input type = 'text' placeholder="SessionId" id = 'txtSessionId'>
+    <button id = 'btnJoin'>Spiel beitretten</button></p2>
 </body>
 <script>
     let clientId = null;
@@ -17,7 +19,10 @@
 
     let ws = new WebSocket("ws://localhost:8003")
 
+    const btnJoin = document.getElementById("btnJoin");
+    const txtSessionId = document.getElementById("txtSessionId");
     const btnCreate = document.getElementById("btnCreate");
+    const nutzername = document.getElementById("txtNameId");
 
     //Button für die Erstellung einer Sitzung
     btnCreate.addEventListener("click", e =>{
@@ -30,7 +35,23 @@
         ws.send(JSON.stringify(payLoad));
     })
 
-    
+
+    btnJoin.addEventListener("click", e =>{
+
+    if (sessionId === null)
+    sessionId = txtSessionId.value
+
+    const payLoad = {
+        "method": "join",
+        "clientId": clientId,
+        "sessionId": sessionId,
+        "nutzername" : nutzername.value
+    }
+    ws.send(JSON.stringify(payLoad));
+
+
+    })
+
 
     ws.onmessage = message => {
         const response = JSON.parse(message.data);
@@ -47,6 +68,11 @@
             console.log("Das ist meine SessionId",sessionId)
         }
 
+        if (response.method === "join"){
+            response.session.clients.forEach(element => {
+                console.log(element.nutzername)
+            });   
+        }
 
     }
 </script>
