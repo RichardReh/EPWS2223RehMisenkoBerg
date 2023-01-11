@@ -1,5 +1,5 @@
 body {
-    background-color: aqua;
+    background-color: rgb(223, 210, 183);
 }
 
 .headline h1 {
@@ -11,8 +11,15 @@ body {
     margin-bottom: 1rem;
 }
 
-.field_container {
-    display: flex;
+.join_options{
+    display:flex;
     justify-content: center;
-    align-items: baseline;
+    flex-direction: row;
+}
+
+.field_container {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }

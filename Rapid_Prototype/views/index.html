@@ -15,9 +15,14 @@
         <div class="create_button">
             <button id = 'btnCreate'>Sitzung erstellen</button>
         </div>
-        <input type = 'text' placeholder="Nutzername" id = 'txtNameId'>
-        <input type = 'text' placeholder="SessionId" id = 'txtSessionId'>
-        <button id = 'btnJoin'>Sitzung beitretten</button>
+        <div class="join_options">
+            <input type = 'text' placeholder="Nutzername" id = 'txtNameId'>
+            <input type = 'text' placeholder="SessionId" id = 'txtSessionId'>
+            <button id = 'btnJoin'>Sitzung beitretten</button>
+        </div>
+    </div>
+    <div id="div_users">
+
     </div>
 </body>
 <script>
@@ -30,6 +35,7 @@
     const txtSessionId = document.getElementById("txtSessionId");
     const btnCreate = document.getElementById("btnCreate");
     const nutzername = document.getElementById("txtNameId");
+    const div_users = document.getElementById("div_users")
 
     //Button für die Erstellung einer Sitzung
     btnCreate.addEventListener("click", e =>{
@@ -76,9 +82,20 @@
         }
 
         if (response.method === "join"){
-            response.session.clients.forEach(element => {
-                console.log(element.nutzername)
-            });   
+            sessionId = response.session.sessionId
+            let session = response.session
+            
+                //console.log(element.nutzername)
+
+            while(div_users.firstChild){
+                div_users.removeChild(div_users.firstChild)
+            } 
+
+            session.clients.forEach(c => {
+                const d = document.createElement("div")
+                d.textContent = c.nutzername
+                div_users.appendChild(d)
+            });
         }
 
         if (response.method === "error"){
