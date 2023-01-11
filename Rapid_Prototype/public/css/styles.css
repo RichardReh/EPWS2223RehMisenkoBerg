@@ -1,3 +1,18 @@
 body {
     background-color: aqua;
 }
+
+.headline h1 {
+    display: flex;
+    justify-content: center;
+}
+
+.field_container .create_button {
+    margin-bottom: 1rem;
+}
+
+.field_container {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+}

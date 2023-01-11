@@ -8,11 +8,17 @@
     <title>EP2023</title>
 </head>
 <body>
-    <h1>Proof of Concept EP2023</h1>
-    <p1><button id = 'btnCreate'>Sitzung erstellen</button></p1><br><br><br>
-    <input type = 'text' placeholder="Nutzername" id = 'txtNameId'>
-    <input type = 'text' placeholder="SessionId" id = 'txtSessionId'>
-    <button id = 'btnJoin'>Spiel beitretten</button></p2>
+    <div class="headline">
+        <h1>Proof of Concept EP2023</h1>
+    </div>
+    <div class="field_container">
+        <div class="create_button">
+            <button id = 'btnCreate'>Sitzung erstellen</button>
+        </div>
+        <input type = 'text' placeholder="Nutzername" id = 'txtNameId'>
+        <input type = 'text' placeholder="SessionId" id = 'txtSessionId'>
+        <button id = 'btnJoin'>Sitzung beitretten</button>
+    </div>
 </body>
 <script>
     let clientId = null;
