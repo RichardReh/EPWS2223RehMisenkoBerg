@@ -1,5 +1,6 @@
 const http = require("http");
 const { connect } = require("http2");
+const { join } = require("path");
 const websocketServer = require("websocket").server
 const httpServer = http.createServer();
 httpServer.listen(8003, () => console.log("Listening.. on 8003"))
@@ -44,6 +45,40 @@ wsServer.on("request", request => {
             const connection = clients[clientId].connection
             connection.send(JSON.stringify(payLoad))
 
+        }
+
+        if (result.method === "join"){ 
+            const clientId = result.clientId
+            const sessionId = result.sessionId
+            const nutzername = result.nutzername
+            let session = null
+
+        
+            session = sessions[sessionId]
+
+            if (!sessions[sessionId]) {
+                const errorPayload = {
+                  "method": "error",
+                  "message": "Session does not exist"
+                }
+                clients[clientId].connection.send(JSON.stringify(errorPayload));
+              } else {
+                session.clients.push({
+                    "clientId" : clientId,
+                    "nutzername" : nutzername
+                })
+    
+                console.log(session)
+    
+                const payLoad = {
+                    "method" : "join",
+                    "session" : session
+                }
+    
+                session.clients.forEach(c => {
+                    clients[c.clientId].connection.send(JSON.stringify(payLoad))
+                });
+              }
         }
 
 
