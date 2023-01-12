@@ -20,6 +20,9 @@
             <input type = 'text' placeholder="SessionId" id = 'txtSessionId'>
             <button id = 'btnJoin'>Sitzung beitretten</button>
         </div>
+        <div class="join_code" id="join_code">
+
+        </div>
     </div>
     <div id="div_users">
 
@@ -36,6 +39,7 @@
     const btnCreate = document.getElementById("btnCreate");
     const nutzername = document.getElementById("txtNameId");
     const div_users = document.getElementById("div_users")
+    const joincode = document.getElementById("join_code");
 
     //Button für die Erstellung einer Sitzung
     btnCreate.addEventListener("click", e =>{
@@ -79,12 +83,20 @@
             sessionId = response.session.id
 
             console.log("Das ist meine SessionId",sessionId)
+
+            let d = document.createElement("h2")
+            d.textContent = "SessionID:  " + sessionId
+            d.style.fontFamily = "Arial"
+
+            joincode.appendChild(d)
+
         }
 
         if (response.method === "join"){
             sessionId = response.session.sessionId
             let session = response.session
-            
+        
+            console.log(div_users)
                 //console.log(element.nutzername)
 
             while(div_users.firstChild){
@@ -94,6 +106,8 @@
             session.clients.forEach(c => {
                 const d = document.createElement("div")
                 d.textContent = c.nutzername
+                d.style.fontFamily = "Impact, Haettenschweiler"
+                d.style.fontSize = "xx-large"
                 div_users.appendChild(d)
             });
         }

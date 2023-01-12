@@ -5,6 +5,8 @@ body {
 .headline h1 {
     display: flex;
     justify-content: center;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: lighter;
 }
 
 .field_container .create_button {
@@ -15,6 +17,10 @@ body {
     display:flex;
     justify-content: center;
     flex-direction: row;
+}
+
+.join_options .join_code{
+    margin-left: 2rem;
 }
 
 .field_container {
