@@ -1,0 +1,31 @@
+body {
+    background-color: rgb(223, 210, 183);
+}
+
+.headline h1 {
+    display: flex;
+    justify-content: center;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: lighter;
+}
+
+.field_container .create_button {
+    margin-bottom: 1rem;
+}
+
+.join_options{
+    display:flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.join_options .join_code{
+    margin-left: 2rem;
+}
+
+.field_container {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}

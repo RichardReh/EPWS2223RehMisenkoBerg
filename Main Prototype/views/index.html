@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>EP2023</title>
+</head>
+<body>
+    <div class="headline">
+        <h1>Proof of Concept EP2023</h1>
+    </div>
+    <div class="field_container">
+        <div class="create_button">
+            <button id = 'btnCreate'>Sitzung erstellen</button>
+        </div>
+        <div class="join_options">
+            <input type = 'text' placeholder="Nutzername" id = 'txtNameId'>
+            <input type = 'text' placeholder="SessionId" id = 'txtSessionId'>
+            <button id = 'btnJoin'>Sitzung beitretten</button>
+        </div>
+        <div class="join_code" id="join_code">
+
+        </div>
+    </div>
+    <div id="div_users">
+
+    </div>
+</body>
+<script>
+    let clientId = null;
+    let sessionId = null;
+
+    let ws = new WebSocket("ws://localhost:8003")
+
+    const btnJoin = document.getElementById("btnJoin");
+    const txtSessionId = document.getElementById("txtSessionId");
+    const btnCreate = document.getElementById("btnCreate");
+    const nutzername = document.getElementById("txtNameId");
+    const div_users = document.getElementById("div_users")
+    const joincode = document.getElementById("join_code");
+
+    //Button für die Erstellung einer Sitzung
+    btnCreate.addEventListener("click", e =>{
+
+        const payLoad = {
+            "method": "create",
+            "clientId": clientId
+        }
+
+        ws.send(JSON.stringify(payLoad));
+    })
+
+
+    btnJoin.addEventListener("click", e =>{
+
+    
+    sessionId = txtSessionId.value
+
+    const payLoad = {
+        "method": "join",
+        "clientId": clientId,
+        "sessionId": sessionId,
+        "nutzername" : nutzername.value
+    }
+    ws.send(JSON.stringify(payLoad));
+
+
+    })
+
+
+    ws.onmessage = message => {
+        const response = JSON.parse(message.data);
+        
+        if(response.method === "connect"){
+            clientId = response.clientId;
+            //Client Id ausgeben
+            console.log(clientId)
+        }
+
+        if (response.method === "create"){
+            sessionId = response.session.id
+
+            console.log("Das ist meine SessionId",sessionId)
+
+            let d = document.createElement("h2")
+            d.textContent = "SessionID:  " + sessionId
+            d.style.fontFamily = "Arial"
+
+            joincode.appendChild(d)
+
+        }
+
+        if (response.method === "join"){
+            sessionId = response.session.sessionId
+            let session = response.session
+        
+            console.log(div_users)
+                //console.log(element.nutzername)
+
+            while(div_users.firstChild){
+                div_users.removeChild(div_users.firstChild)
+            } 
+
+            session.clients.forEach(c => {
+                const d = document.createElement("div")
+                d.textContent = c.nutzername
+                d.style.fontFamily = "Impact, Haettenschweiler"
+                d.style.fontSize = "xx-large"
+                div_users.appendChild(d)
+            });
+        }
+
+        if (response.method === "error"){
+            console.log(response.message) 
+        }
+
+    }
+</script>
+</html>
