@@ -29,3 +29,21 @@ body {
     align-items: center;
     flex-direction: column;
 }
+
+.image_html_section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    margin-top: 5rem;
+}
+
+img {
+    width: 60vw;
+    border: 1px solid black;
+    background-position: center;
+    object-fit: contain;
+    overflow: hidden;
+    margin-bottom: 10vh;
+}

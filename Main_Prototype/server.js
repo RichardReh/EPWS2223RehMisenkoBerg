@@ -11,7 +11,9 @@ const clients = {};
 const sessions = {};
 
 const wsServer = new websocketServer({
-    "httpServer": httpServer
+    "httpServer": httpServer,
+    "maxReceivedFrameSize": 9999999,
+    "maxReceivedMessageSize": 10 * 1024 * 1024,
 })
 
 wsServer.on("request", request => {
@@ -32,7 +34,8 @@ wsServer.on("request", request => {
             const sessionId = guid()
             sessions[sessionId] = {
                 "id": sessionId,
-                "clients": []
+                "clients": [],
+                "image" : ""
             }
 
             console.log("Neue Session ",sessions[sessionId]);
@@ -79,6 +82,31 @@ wsServer.on("request", request => {
                     clients[c.clientId].connection.send(JSON.stringify(payLoad))
                 });
               }
+        }
+
+        if (result.method === "upload_image"){
+            const clientId = result.clientId
+            const sessionId = result.sessionId
+            const image = result.image
+            let session = null
+
+            console.log(image)
+
+            const payLoad = {
+                "method" : "get_image",
+                "image" : image,
+            }
+
+            session = sessions[sessionId]
+            
+            console.log(session.clients)
+
+            session.clients.forEach(c => {
+                if(clients[c.clientId] != clientId){
+                    clients[c.clientId].connection.send(JSON.stringify(payLoad))
+                }
+            })
+
         }
 
 
