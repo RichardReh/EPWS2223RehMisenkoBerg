@@ -27,10 +27,20 @@
     <div id="div_users">
 
     </div>
+    <div class="image_html_section">
+        <input type="file" id="image_input" accept="image/png, image/jpg">
+
+        <canvas id="imageCanvas"></canvas>
+        <!--<img src="" id="display_image"></img>-->
+    </div>
 </body>
 <script>
     let clientId = null;
-    let sessionId = null;
+    var sessionId = ""
+    // Aus irgend einem Grund wird die sessionId als undefined im untersten Codeblock für die Image
+    // sende-logik gespeichert und lässt sich nicht ein mal korrekt referenzieren.
+    // darum benutzen wir die "sessionId_for_image_send"
+    var sessionId_for_image_send = ""
 
     let ws = new WebSocket("ws://localhost:8003")
 
@@ -57,6 +67,9 @@
 
     
     sessionId = txtSessionId.value
+
+    sessionId_for_image_send = sessionId
+
 
     const payLoad = {
         "method": "join",
@@ -95,6 +108,7 @@
         if (response.method === "join"){
             sessionId = response.session.sessionId
             let session = response.session
+
         
             console.log(div_users)
                 //console.log(element.nutzername)
@@ -112,10 +126,90 @@
             });
         }
 
+        if (response.method === "get_image"){
+            const image = response.image
+
+            console.log("DAS IST DAS BILD:  "+ image)
+
+            const encodedImage = new Image()
+            encodedImage.onload = function() {
+                var canvas = document.getElementById('imageCanvas');
+                canvas.width = encodedImage.width;
+                canvas.height = encodedImage.height;
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(encodedImage,0,0);
+            }
+            encodedImage.src = image
+
+            console.log("DAS IST DAS ENKODIERTE BILD:  "+ encodedImage.src)
+
+            //console.log(image)
+            //document.querySelector("#display_image").src = image
+
+        }
+
         if (response.method === "error"){
             console.log(response.message) 
         }
 
     }
+
+    // LOGIK FÜR DEN IMAGE UPLOAD
+
+    const image_input = document.querySelector("#image_input");
+    //var uploaded_image = "";
+
+    //image_input.addEventListener("change", function(){
+    //    const reader = new FileReader();
+    //    reader.addEventListener("load", () => {
+    //        uploaded_image = reader.result;
+    //        document.querySelector("#display_image").src = uploaded_image
+
+        var imageLoader = document.getElementById('image_input');
+        imageLoader.addEventListener('change', handleImage, false);
+        var canvas = document.getElementById('imageCanvas');
+        var ctx = canvas.getContext('2d');
+
+        function handleImage(e){
+            var reader = new FileReader();
+            reader.onload = function(event){
+                var img = new Image();
+                img.onload = function(){
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img,0,0);
+                }
+            img.src = event.target.result;
+            var sendableImage = event.target.result;
+
+                if(sessionId_for_image_send != ""){
+                const payLoad = {
+                    "method": "upload_image",
+                    "clientId": clientId,
+                    "sessionId": sessionId_for_image_send,
+                    "image" : sendableImage,
+                }
+                ws.send(JSON.stringify(payLoad));
+                }
+            }
+            reader.readAsDataURL(e.target.files[0]);     
+        }
+                
+
+    //        if(sessionId_for_image_send != ""){
+    //            const payLoad = {
+    //            "method": "upload_image",
+    //            "clientId": clientId,
+    //            "sessionId": sessionId_for_image_send,
+    //            "image" : uploaded_image,
+    //        }
+
+    //        ws.send(JSON.stringify(payLoad));
+    //        }
+
+    //    });
+    //    reader.readAsDataURL(this.files[0]);
+    //});
+
 </script>
 </html>
