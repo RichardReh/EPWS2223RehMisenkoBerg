@@ -39,11 +39,10 @@ body {
     margin-top: 5rem;
 }
 
-img {
+canvas {
     width: 60vw;
     border: 1px solid black;
     background-position: center;
-    object-fit: contain;
     overflow: hidden;
     margin-bottom: 10vh;
 }

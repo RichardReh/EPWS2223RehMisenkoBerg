@@ -30,7 +30,8 @@
     <div class="image_html_section">
         <input type="file" id="image_input" accept="image/png, image/jpg">
 
-        <img src="" id="display_image"></img>
+        <canvas id="imageCanvas"></canvas>
+        <!--<img src="" id="display_image"></img>-->
     </div>
 </body>
 <script>
@@ -127,11 +128,25 @@
 
         if (response.method === "get_image"){
             const image = response.image
-            console.log(image)
-            document.querySelector("#display_image").src = image
+
+            console.log("DAS IST DAS BILD:  "+ image)
+
+            const encodedImage = new Image()
+            encodedImage.onload = function() {
+                var canvas = document.getElementById('imageCanvas');
+                canvas.width = encodedImage.width;
+                canvas.height = encodedImage.height;
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(encodedImage,0,0);
+            }
+            encodedImage.src = image
+
+            console.log("DAS IST DAS ENKODIERTE BILD:  "+ encodedImage.src)
+
+            //console.log(image)
+            //document.querySelector("#display_image").src = image
 
         }
-
 
         if (response.method === "error"){
             console.log(response.message) 
@@ -142,29 +157,59 @@
     // LOGIK FÜR DEN IMAGE UPLOAD
 
     const image_input = document.querySelector("#image_input");
-    var uploaded_image = "";
+    //var uploaded_image = "";
 
-    image_input.addEventListener("change", function(){
-        const reader = new FileReader();
-        reader.addEventListener("load", () => {
-            uploaded_image = reader.result;
-            document.querySelector("#display_image").src = uploaded_image
-            console.log(uploaded_image)
+    //image_input.addEventListener("change", function(){
+    //    const reader = new FileReader();
+    //    reader.addEventListener("load", () => {
+    //        uploaded_image = reader.result;
+    //        document.querySelector("#display_image").src = uploaded_image
 
-            console.log("KANNST DU DAS LESEN?  " + sessionId_for_image_send)
+        var imageLoader = document.getElementById('image_input');
+        imageLoader.addEventListener('change', handleImage, false);
+        var canvas = document.getElementById('imageCanvas');
+        var ctx = canvas.getContext('2d');
 
-            const payLoad = {
-                "method": "upload_image",
-                "clientId": clientId,
-                "sessionId": sessionId_for_image_send,
-                "image" : uploaded_image,
+        function handleImage(e){
+            var reader = new FileReader();
+            reader.onload = function(event){
+                var img = new Image();
+                img.onload = function(){
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img,0,0);
+                }
+            img.src = event.target.result;
+            var sendableImage = event.target.result;
+
+                if(sessionId_for_image_send != ""){
+                const payLoad = {
+                    "method": "upload_image",
+                    "clientId": clientId,
+                    "sessionId": sessionId_for_image_send,
+                    "image" : sendableImage,
+                }
+                ws.send(JSON.stringify(payLoad));
+                }
             }
+            reader.readAsDataURL(e.target.files[0]);     
+        }
+                
 
-            ws.send(JSON.stringify(payLoad));
+    //        if(sessionId_for_image_send != ""){
+    //            const payLoad = {
+    //            "method": "upload_image",
+    //            "clientId": clientId,
+    //            "sessionId": sessionId_for_image_send,
+    //            "image" : uploaded_image,
+    //        }
 
-        });
-        reader.readAsDataURL(this.files[0]);
-    });
+    //        ws.send(JSON.stringify(payLoad));
+    //        }
+
+    //    });
+    //    reader.readAsDataURL(this.files[0]);
+    //});
 
 </script>
 </html>
