@@ -40,7 +40,6 @@ body {
 }
 
 canvas {
-    width: 60vw;
     border: 1px solid black;
     background-position: center;
     overflow: hidden;
