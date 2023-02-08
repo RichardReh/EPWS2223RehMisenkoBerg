@@ -32,6 +32,8 @@
             <!--Lösch-Funktion für alle erstellte Zeichnungen-->
             <button onclick="javascript:clearArea();return false;">Clear</button>
 
+            <button onclick="javascript:undo();return false;">Undo</button>
+
             <!--Linien Größen für das Zeichnen-->
             Line width : <select id="selWidth">
                 <option value="10">10</option>
@@ -205,6 +207,10 @@
         var canvas = document.getElementById('imageCanvas');
         var context = canvas.getContext('2d');
 
+        var initialImage = ""
+        let restore_array = [];
+        let index = -1;
+
         function handleImage(e){
             var reader = new FileReader();
             reader.onload = function(event){
@@ -214,6 +220,9 @@
                     canvas.width = img.width;
                     canvas.height = img.height;
                     context.drawImage(img,0,0);
+                    initialImage = context.getImageData(0, 0, canvas.width, canvas.height)
+                    restore_array = [];
+                    index = -1;
                 }
             img.src = event.target.result;
             var sendableImage = event.target.result;
@@ -249,7 +258,6 @@
 
     //Canvas Funktionen
 
-
     let isDrawing = false;
     let x = 0;
     let y = 0;
@@ -282,6 +290,13 @@
             y = 0;
             isDrawing = false;
             }
+            if(e.type != 'mouseout'){
+                restore_array.push(context.getImageData(0, 0, canvas.width, canvas.height));
+                index += 1;
+
+                
+            }
+            console.log(restore_array)
         });
     }
 
@@ -368,9 +383,25 @@
     }
 
     function clearArea() {
-        context.setTransform(1, 0, 0, 1, 0, 0);
-        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-        
+        //context.setTransform(1, 0, 0, 1, 0, 0);
+        //context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+        if(initialImage != ""){
+            context.putImageData(initialImage, 0, 0)
+            restore_array = [];
+            index = -1;
+        }
+    }
+
+    function undo() {
+        if(index <= 0){
+            context.putImageData(initialImage, 0, 0)
+            restore_array = [];
+            index = -1;
+        } else {
+            index -= 1
+            restore_array.pop();
+            context.putImageData(restore_array[index], 0, 0)
+        }
     }
 
 </script>
