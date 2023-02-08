@@ -1,4 +1,5 @@
 body {
+    height: 100vh;
     background-image: linear-gradient(180deg, #76f1f1 0%, #4c88bd 60%);
 }
 
