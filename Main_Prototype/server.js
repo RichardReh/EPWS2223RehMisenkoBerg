@@ -35,7 +35,7 @@ wsServer.on("request", request => {
             sessions[sessionId] = {
                 "id": sessionId,
                 "clients": [],
-                //"image" : ""
+                "image" : ""
             }
 
             console.log("Neue Session ",sessions[sessionId]);
@@ -98,6 +98,8 @@ wsServer.on("request", request => {
             }
 
             session = sessions[sessionId]
+
+            session.image = image
             
             console.log(session.clients)
 

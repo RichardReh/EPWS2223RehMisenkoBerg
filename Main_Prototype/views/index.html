@@ -147,6 +147,18 @@
                 d.style.fontSize = "xx-large"
                 div_users.appendChild(d)
             });
+
+            if(session.image != ""){
+                const encodedImage = new Image()
+                encodedImage.onload = function() {
+                    var canvas = document.getElementById('imageCanvas');
+                    canvas.width = encodedImage.width;
+                    canvas.height = encodedImage.height;
+                    var ctx = canvas.getContext('2d');
+                    ctx.drawImage(encodedImage,0,0);
+                }
+                encodedImage.src = session.image
+            }
         }
 
         if (response.method === "get_image"){

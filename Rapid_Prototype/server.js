@@ -32,7 +32,8 @@ wsServer.on("request", request => {
             const sessionId = guid()
             sessions[sessionId] = {
                 "id": sessionId,
-                "clients": []
+                "clients": [],
+                "image" : ""
             }
 
             console.log("Neue Session ",sessions[sessionId]);
