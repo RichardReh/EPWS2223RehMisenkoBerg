@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(223, 210, 183);
+    background-image: linear-gradient(180deg, #76f1f1 0%, #4c88bd 60%);
 }
 
 .headline h1 {
@@ -42,6 +42,6 @@ body {
 canvas {
     border: 1px solid black;
     background-position: center;
-    overflow: hidden;
+    overflow: auto;
     margin-bottom: 10vh;
 }
