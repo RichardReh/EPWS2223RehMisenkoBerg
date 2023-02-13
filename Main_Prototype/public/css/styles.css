@@ -1,37 +1,72 @@
 html,body {
     height: auto;
     min-height: 100vh;
+    margin : 0;
     background-repeat: no-repeat;
     background-size: cover;
     background-image: linear-gradient(180deg, #76f1f1 0%, #4c88bd 60%);
 }
 
-.headline h1 {
+/* <-----  Header  -----> */
+.headerbar{
     display: flex;
-    justify-content: center;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-weight: lighter;
-}
+    height: 4rem;
+    background-color: black;
+    align-items: center;
+    justify-content: space-between;
 
-.field_container .create_button {
-    margin-bottom: 1rem;
 }
-
-.join_options{
-    display:flex;
-    justify-content: center;
-    flex-direction: row;
-}
-
-.join_options .join_code{
+.headerleft{
+    display: flex;
+    gap: 0.5rem;
     margin-left: 2rem;
 }
+.headerbar h1{
+    display: flex;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: lighter;
+    color: white; 
+}
+.logo{
+    height: 3rem;
+    width: 8rem;
+}
+.headerright{
+    display: flex;
+    gap: 0.5rem;
+    margin-right: 2rem;
+}
+.upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+  }
+  .upload-btn-wrapper input[type=file] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+  }
+.headerbar button {
+    background: linear-gradient(180deg, #76F1F1 0%, #4C88BD 100%);
+    border: none;
+    border-radius: 8px;
+    width: 4rem;
+    height: 2rem;
+}
+/* xxxxx */
+input {
+    width: 8rem;
+    border: none;
+    border-radius: 5px;
+}
 
-.field_container {
-    display:flex;
+.session_tag{
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
 }
 
 .image_html_section {
@@ -48,5 +83,4 @@ canvas {
     background-position: center;
     overflow: auto;
     margin-bottom: 10vh;
-    width: 60vw;
 }
