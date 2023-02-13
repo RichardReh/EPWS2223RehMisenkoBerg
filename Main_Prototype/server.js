@@ -25,7 +25,7 @@ wsServer.on("request", request => {
         const result = JSON.parse(message.utf8Data)
        
         //Client Message empfangen
-        console.log(result)
+        //console.log(result)
 
 
         //eine Sitzung erstellen mit einer neuen Sitzungs ID
@@ -35,7 +35,7 @@ wsServer.on("request", request => {
             sessions[sessionId] = {
                 "id": sessionId,
                 "clients": [],
-                //"image" : ""
+                "image" : ""
             }
 
             console.log("Neue Session ",sessions[sessionId]);
@@ -88,24 +88,75 @@ wsServer.on("request", request => {
             const clientId = result.clientId
             const sessionId = result.sessionId
             const image = result.image
+            const newImage = result.newImage
             let session = null
 
-            console.log(image)
+            //console.log(image)
 
             const payLoad = {
                 "method" : "get_image",
                 "image" : image,
+                "newImage" : newImage
             }
 
             session = sessions[sessionId]
+
+            session.image = image
             
-            console.log(session.clients)
+            console.log(clientId)
+
+            var i = 0
 
             session.clients.forEach(c => {
-                if(clients[c.clientId] != clientId){
+                if(c.clientId !== clientId){
+                    i += 1
                     clients[c.clientId].connection.send(JSON.stringify(payLoad))
                 }
             })
+            console.log("I von upload_image ist:  "+i)
+        }
+
+        if (result.method === "undo"){
+            const sessionId = result.sessionId
+            const clientId = result.clientId
+            const session = sessions[sessionId]
+
+            const payLoad = {
+                "method" : "undoImage",
+            }
+
+            var i = 0
+
+            session.clients.forEach(c => {
+                if(c.clientId !== clientId){
+                    i += 1
+                    clients[c.clientId].connection.send(JSON.stringify(payLoad))
+                }
+            })
+            console.log("i ist: " + i)
+        }
+
+        if (result.method === "clear"){
+            const sessionId = result.sessionId
+            const clientId = result.clientId
+            const session = sessions[sessionId]
+
+            console.log("CLIENT ID: " + clientId)
+            console.log("SESSION ID: " + sessionId)
+
+            const payLoad = {
+                "method" : "clearImage",
+            }
+
+            var i = 0
+
+            session.clients.forEach(c => {
+                if(c.clientId !== clientId){
+                    i += 1
+                    clients[c.clientId].connection.send(JSON.stringify(payLoad))
+                }
+            })
+            console.log("i ist: " + i)
 
         }
 
