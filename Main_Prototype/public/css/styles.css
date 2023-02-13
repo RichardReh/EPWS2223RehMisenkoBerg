@@ -82,5 +82,6 @@ canvas {
     border: 1px solid black;
     background-position: center;
     overflow: auto;
+    width: 60vw;
     margin-bottom: 10vh;
 }
