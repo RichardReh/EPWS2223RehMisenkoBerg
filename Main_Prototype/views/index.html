@@ -80,19 +80,12 @@
     const joincode = document.getElementById("join_code");
 
     //Button für die Erstellung einer Sitzung
-    btnCreate.addEventListener("click", e =>{
-
-        if (nutzername.value != ""){
+    btnCreate.addEventListener("click", e =>{    
             const payLoad = {
             "method": "create",
-            "clientId": clientId,
-            "nutzername" : nutzername.value
-        }
-
+            "clientId": clientId
+            }
         ws.send(JSON.stringify(payLoad));
-        } else {
-            console.log("Kein Nutzername angegeben !")
-        }
     })
 
 
