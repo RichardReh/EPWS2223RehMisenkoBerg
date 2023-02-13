@@ -48,4 +48,5 @@ canvas {
     background-position: center;
     overflow: auto;
     margin-bottom: 10vh;
+    width: 60vw;
 }

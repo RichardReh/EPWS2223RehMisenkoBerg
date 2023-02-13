@@ -80,12 +80,17 @@
     //Button für die Erstellung einer Sitzung
     btnCreate.addEventListener("click", e =>{
 
-        const payLoad = {
+        if (nutzername.value != ""){
+            const payLoad = {
             "method": "create",
-            "clientId": clientId
+            "clientId": clientId,
+            "nutzername" : nutzername.value
         }
 
         ws.send(JSON.stringify(payLoad));
+        } else {
+            console.log("Kein Nutzername angegeben !")
+        }
     })
 
 
@@ -177,6 +182,8 @@
                 var canvas = document.getElementById('imageCanvas');
                 canvas.width = encodedImage.width;
                 canvas.height = encodedImage.height;
+                originalImageX = encodedImage.width;
+                originalImageY = encodedImage.height;
                 var ctx = canvas.getContext('2d');
                 ctx.drawImage(encodedImage,0,0);
 
@@ -188,9 +195,19 @@
                     initialImage = context.getImageData(0, 0, canvas.width, canvas.height)
                     restore_array = [];
                     index = -1;
+
+                    let canvasSizeX = canvas.width * 0.6 
+                    let canvasSizeY = canvas.height * 0.6
+                    console.log(canvasSizeX + "und" + canvasSizeY)
+                    let relativePositionX = canvasSizeX/originalImageX
+                    let relativePositionY = canvasSizeY/originalImageY
+                    kehrwertX = 1/relativePositionX
+                    kehrwertY = 1/relativePositionY
                 }
             }
             encodedImage.src = image
+
+            
 
             //console.log("DAS IST DAS ENKODIERTE BILD:  "+ encodedImage.src)
 
@@ -266,6 +283,9 @@
         var context = canvas.getContext('2d');
 
         var initialImage = ""
+        var originalImageX = 0
+        var originalImageY = 0
+
         let restore_array = [];
         let index = -1;
 
@@ -277,10 +297,20 @@
 
                     canvas.width = img.width;
                     canvas.height = img.height;
+                    originalImageX = img.width;
+                    originalImageY = img.height
                     context.drawImage(img,0,0);
                     initialImage = context.getImageData(0, 0, canvas.width, canvas.height)
                     restore_array = [];
                     index = -1;
+
+                    let canvasSizeX = canvas.width * 0.6 
+                    let canvasSizeY = canvas.height * 0.6
+                    console.log(canvasSizeX + "und" + canvasSizeY)
+                    let relativePositionX = canvasSizeX/originalImageX
+                    let relativePositionY = canvasSizeY/originalImageY
+                    kehrwertX = 1/relativePositionX
+                    kehrwertY = 1/relativePositionY
                 }
             img.src = event.target.result;
             var sendableImage = event.target.result;
@@ -323,6 +353,10 @@
     var offsetX;
     var offsetY;
 
+    var kehrwertX = 0
+    var kehrwertY = 0
+
+
     function startup() {
         canvas.addEventListener('touchstart', handleStart);
         canvas.addEventListener('touchend', handleEnd);
@@ -336,7 +370,7 @@
 
         canvas.addEventListener('mousemove', (e) => {
             if (isDrawing) {
-            drawLine(context, x, y, e.offsetX, e.offsetY);
+            drawLine(context, x * kehrwertX, y * kehrwertY, e.offsetX * kehrwertX, e.offsetY * kehrwertY);
             x = e.offsetX;
             y = e.offsetY;
             }
@@ -344,7 +378,7 @@
 
         canvas.addEventListener('mouseup', (e) => {
             if (isDrawing) {
-            drawLine(context, x, y, e.offsetX, e.offsetY);
+            drawLine(context, x * kehrwertX, y * kehrwertY, e.offsetX * kehrwertX, e.offsetY * kehrwertY);
             x = 0;
             y = 0;
             isDrawing = false;

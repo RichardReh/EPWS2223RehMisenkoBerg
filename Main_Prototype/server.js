@@ -31,12 +31,15 @@ wsServer.on("request", request => {
         //eine Sitzung erstellen mit einer neuen Sitzungs ID
         if (result.method === "create"){ 
             const clientId = result.clientId
+            const nutzername = result.nutzername
             const sessionId = guid()
             sessions[sessionId] = {
                 "id": sessionId,
                 "clients": [],
                 "image" : ""
             }
+
+            let session = sessions[sessionId]
 
             console.log("Neue Session ",sessions[sessionId]);
 
@@ -45,8 +48,19 @@ wsServer.on("request", request => {
                 "session": sessions[sessionId]
             }
 
+            const payLoad2 = {
+                "method" : "join",
+                "session" : session
+            }
+
+            session.clients.push({
+                "clientId" : clientId,
+                "nutzername" : nutzername
+            })
+
             const connection = clients[clientId].connection
             connection.send(JSON.stringify(payLoad))
+            connection.send(JSON.stringify(payLoad2))
 
         }
 
