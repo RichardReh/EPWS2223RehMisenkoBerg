@@ -66,6 +66,7 @@
     // sende-logik gespeichert und lässt sich nicht ein mal korrekt referenzieren.
     // darum benutzen wir die "sessionId_for_image_send"
     var sessionId_for_image_send = ""
+    var clientId_for_undo_or_clear = ""
 
     let ws = new WebSocket("ws://localhost:8003")
 
@@ -115,6 +116,8 @@
             clientId = response.clientId;
             //Client Id ausgeben
             console.log(clientId)
+
+            clientId_for_undo_or_clear = clientId
         }
 
         if (response.method === "create"){
@@ -165,8 +168,9 @@
 
         if (response.method === "get_image"){
             const image = response.image
+            const newImage = response.newImage
 
-            console.log("DAS IST DAS BILD:  "+ image)
+            //console.log("DAS IST DAS BILD:  "+ image)
 
             const encodedImage = new Image()
             encodedImage.onload = function() {
@@ -175,21 +179,75 @@
                 canvas.height = encodedImage.height;
                 var ctx = canvas.getContext('2d');
                 ctx.drawImage(encodedImage,0,0);
+
+                const imageData = context.getImageData(0, 0, canvas.width, canvas.height)
+                restore_array.push(imageData)
+                index += 1
+
+                if(newImage){
+                    initialImage = context.getImageData(0, 0, canvas.width, canvas.height)
+                    restore_array = [];
+                    index = -1;
+                }
             }
             encodedImage.src = image
 
-            console.log("DAS IST DAS ENKODIERTE BILD:  "+ encodedImage.src)
+            //console.log("DAS IST DAS ENKODIERTE BILD:  "+ encodedImage.src)
 
-            //console.log(image)
-            //document.querySelector("#display_image").src = image
+        }
 
+        if (response.method === "undoImage"){
+            if(index <= 0){
+            restore_array = [];
+            index = -1;
+
+            //var jpegUrl = ""
+            //const encodedImage = new Image()
+            //encodedImage.onload = function() {
+            //    var canvas = document.getElementById('imageCanvas');
+            //    canvas.width = encodedImage.width;
+            //    canvas.height = encodedImage.height;
+            //    var ctx = canvas.getContext('2d');
+            //    ctx.drawImage(encodedImage,0,0);
+            //    jpegUrl = canvas.toDataURL("image/jpeg");
+            //}
+            //encodedImage.src = initialImage
+            context.putImageData(initialImage, 0 , 0)
+
+            } else {
+                restore_array.pop();
+                index -= 1
+                context.putImageData(restore_array[index], 0, 0)
+                //var jpegUrl = canvas.toDataURL("image/jpeg");
+            }
+        }
+
+        if (response.method === "clearImage"){
+            if(initialImage != ""){
+            //    var jpegUrl = ""
+            //    const encodedImage = new Image()
+            //    encodedImage.onload = function() {
+            //        var canvas = document.getElementById('imageCanvas');
+            //        canvas.width = encodedImage.width;
+            //        canvas.height = encodedImage.height;
+            //        var ctx = canvas.getContext('2d');
+            //        ctx.drawImage(encodedImage,0,0);
+            //        jpegUrl = canvas.toDataURL("image/jpeg");
+                    //console.log(jpegUrl)
+            //    }
+            //    encodedImage.src = initialImage
+            context.putImageData(initialImage, 0 , 0)
+
+                restore_array = [];
+                index = -1;
+            }
         }
 
         if (response.method === "error"){
             console.log(response.message) 
         }
 
-    }
+    } 
 
     // LOGIK FÜR DEN IMAGE UPLOAD
 
@@ -230,9 +288,10 @@
                 if(sessionId_for_image_send != ""){
                 const payLoad = {
                     "method": "upload_image",
-                    "clientId": clientId,
+                    "clientId": clientId_for_undo_or_clear,
                     "sessionId": sessionId_for_image_send,
                     "image" : sendableImage,
+                    "newImage" : true
                 }
                 ws.send(JSON.stringify(payLoad));
                 }
@@ -290,12 +349,24 @@
             y = 0;
             isDrawing = false;
             }
+
             if(e.type != 'mouseout'){
                 restore_array.push(context.getImageData(0, 0, canvas.width, canvas.height));
                 index += 1;
-
-                
             }
+
+            var jpegUrl = canvas.toDataURL("image/jpeg");
+
+            const payLoad = {
+                "method" : "upload_image",
+                "clientId" : clientId_for_undo_or_clear,
+                "sessionId" : sessionId_for_image_send,
+                "image" : jpegUrl,
+                "newImage" : false
+            }
+
+            ws.send(JSON.stringify(payLoad));
+
             console.log(restore_array)
         });
     }
@@ -329,7 +400,7 @@
             context.lineJoin = "round";
             context.closePath();
             context.stroke();
-            ongoingTouches.splice(idx, 1, copyTouch(touches[i]));  // swap in the new touch record
+            ongoingTouches.splice(idx, 1, copyTouch(touches[i]));
             }
         }
     }
@@ -343,7 +414,7 @@
             if (idx >= 0) {
             context.lineWidth = document.getElementById('selWidth').value;
             context.fillStyle = color;
-            ongoingTouches.splice(idx, 1);  // remove it; we're done
+            ongoingTouches.splice(idx, 1);  
             }
         }
     }
@@ -353,7 +424,7 @@
         const touches = evt.changedTouches;
         for (let i = 0; i < touches.length; i++) {
             let idx = ongoingTouchIndexById(touches[i].identifier);
-            ongoingTouches.splice(idx, 1);  // remove it; we're done
+            ongoingTouches.splice(idx, 1);  
         }
     }
 
@@ -368,7 +439,7 @@
             return i;
             }
         }
-        return -1;    // not found
+        return -1;  
     }
 
     function drawLine(context, x1, y1, x2, y2) {
@@ -383,24 +454,79 @@
     }
 
     function clearArea() {
-        //context.setTransform(1, 0, 0, 1, 0, 0);
-        //context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+
         if(initialImage != ""){
+
+            //var jpegUrl = ""
+            //const encodedImage = new Image()
+            //encodedImage.onload = function() {
+            //    var canvas = document.getElementById('imageCanvas');
+            //    canvas.width = encodedImage.width;
+            //    canvas.height = encodedImage.height;
+            //    var ctx = canvas.getContext('2d');
+            //    ctx.drawImage(encodedImage,0,0);
+            //    jpegUrl = canvas.toDataURL("image/jpeg");
+            //    //console.log(jpegUrl)
+            //}
+            //encodedImage.src = initialImage
+
             context.putImageData(initialImage, 0, 0)
+
             restore_array = [];
             index = -1;
+
+            const payLoad = {
+                "method" : "clear",
+                "clientId" : clientId_for_undo_or_clear,
+                "sessionId" : sessionId_for_image_send,
+            }
+
+            ws.send(JSON.stringify(payLoad));
         }
     }
 
     function undo() {
         if(index <= 0){
-            context.putImageData(initialImage, 0, 0)
+
             restore_array = [];
             index = -1;
+            
+            //var jpegUrl = ""
+            //const encodedImage = new Image()
+            //encodedImage.onload = function() {
+            //    var canvas = document.getElementById('imageCanvas');
+            //    canvas.width = encodedImage.width;
+            //    canvas.height = encodedImage.height;
+            //    var ctx = canvas.getContext('2d');
+            //    ctx.drawImage(encodedImage,0,0);
+            //    console.log(restore_array)
+            //    //jpegUrl = canvas.toDataURL("image/jpeg");
+            //}
+            //encodedImage.src = initialImage
+
+            context.putImageData(initialImage, 0, 0)
+
+            const payLoad = {
+                "method" : "clear",
+                "clientId" : clientId_for_undo_or_clear,
+                "sessionId" : sessionId_for_image_send,
+            }
+
+            ws.send(JSON.stringify(payLoad));
         } else {
             index -= 1
             restore_array.pop();
+            console.log(restore_array)
             context.putImageData(restore_array[index], 0, 0)
+            //var jpegUrl = canvas.toDataURL("image/jpeg");
+
+            const payLoad = {
+                "method" : "undo",
+                "sessionId" : sessionId_for_image_send,
+                "clientId" : clientId_for_undo_or_clear,
+            }
+
+            ws.send(JSON.stringify(payLoad));
         }
     }
 
