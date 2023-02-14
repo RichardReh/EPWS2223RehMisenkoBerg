@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/styles.css">
+    
+
     <title>EP2023</title>
 </head>
 <body>
@@ -27,26 +29,31 @@
         </div>
     </div>
         <div class="session_tag" id="join_code">
-
         </div>
     <div id="div_users">
     </div>
     <div class="image_html_section">
-        <div>
+        <div class="paintbar">
             <!--Lösch-Funktion für alle erstellte Zeichnungen-->
-            <button onclick="javascript:clearArea();return false;">Clear</button>
-
-            <button onclick="javascript:undo();return false;">Undo</button>
-
-            <!--Linien Größen für das Zeichnen-->
-            Line width : <select id="selWidth">
-                <option value="10">10</option>
-                <option value="20" selected="selected">20</option>
-                <option value="30">30</option>
-            </select>
+            <div class="paintbarleft">
+            <button onclick="javascript:undo();return false;" class="undoclear"></button>
+            <button onclick="javascript:clearArea();return false;" class="undoclear"></button>
+            </div>
+            <div>
+            <input type="range" min="1" max="30" id="pen_range" onInput="draw_with = this.value"> 
+            </div>
+            <div class="paintbarright">
+            <button onClick=change_color(this) class="colorChange" style="background: white;"></button>
+            <button onClick=change_color(this) class="colorChange" style="background: black;"></button>
+            <button onClick=change_color(this) class="colorChange" style="background: grey;"></button>    
+            <button onClick=change_color(this) class="colorChange"  style="background: red;"></button>
+            <button onClick=change_color(this) class="colorChange"  style="background: blue;"></button>
+            <button onClick=change_color(this) class="colorChange"  style="background: green;"></button>
+            <button onClick=change_color(this) class="colorChange" style="background: yellow;"></button>
+            </div>
 
             <!--Farbauswahl für das Zeichnen-->
-            Color : <select id="selColor">
+            <!--Color : <select id="selColor">
                 <option value="black">black</option>
                 <option value="blue" selected="selected">blue</option>
                 <option value="red">red</option>
@@ -54,7 +61,7 @@
                 <option value="yellow">yellow</option>
                 <option value="gray">gray</option>
                 <option value="white">white</option>
-            </select>
+            </select>-->
 
         </div>
         <canvas id="imageCanvas"></canvas>
@@ -350,7 +357,12 @@
 
     var kehrwertX = 0
     var kehrwertY = 0
+    
+    var activeColor = "black";
 
+    function change_color(element){
+        activeColor = element.style.background;
+    }
 
     function startup() {
         canvas.addEventListener('touchstart', handleStart);
@@ -418,13 +430,13 @@
         evt.preventDefault();
         const touches = evt.changedTouches;
         for (let i = 0; i < touches.length; i++) {
-            const color = document.getElementById('selColor').value;
+            const color = activeColor
             const idx = ongoingTouchIndexById(touches[i].identifier);
             if (idx >= 0) {
             context.beginPath();
             context.moveTo(ongoingTouches[idx].clientX - offsetX, ongoingTouches[idx].clientY - offsetY);
             context.lineTo(touches[i].clientX - offsetX, touches[i].clientY - offsetY);
-            context.lineWidth = document.getElementById('selWidth').value;
+            context.lineWidth = document.getElementById('pen_range').value;
             context.strokeStyle = color;
             context.lineJoin = "round";
             context.closePath();
@@ -438,10 +450,10 @@
         evt.preventDefault();
         const touches = evt.changedTouches;
         for (let i = 0; i < touches.length; i++) {
-            const color = document.getElementById('selColor').value;
+            const color = activeColor;
             let idx = ongoingTouchIndexById(touches[i].identifier);
             if (idx >= 0) {
-            context.lineWidth = document.getElementById('selWidth').value;
+            context.lineWidth = document.getElementById('pen_range').value;
             context.fillStyle = color;
             ongoingTouches.splice(idx, 1);  
             }
@@ -473,8 +485,8 @@
 
     function drawLine(context, x1, y1, x2, y2) {
         context.beginPath();
-        context.strokeStyle = document.getElementById('selColor').value;
-        context.lineWidth = document.getElementById('selWidth').value;
+        context.strokeStyle = activeColor;
+        context.lineWidth = document.getElementById('pen_range').value;
         context.lineJoin = "round";
         context.moveTo(x1, y1);
         context.lineTo(x2, y2);
