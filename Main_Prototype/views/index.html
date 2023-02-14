@@ -168,6 +168,15 @@
                     canvas.height = encodedImage.height;
                     var ctx = canvas.getContext('2d');
                     ctx.drawImage(encodedImage,0,0);
+                    originalImageX = encodedImage.width
+                    originalImageY = encodedImage.height
+                    let canvasSizeX = canvas.scrollWidth
+                    let canvasSizeY = canvas.scrollHeight
+                    console.log(canvasSizeX + "und" + canvasSizeY)
+                    let relativePositionX = canvasSizeX/originalImageX
+                    let relativePositionY = canvasSizeY/originalImageY
+                    kehrwertX = 1/relativePositionX
+                    kehrwertY = 1/relativePositionY
                 }
                 encodedImage.src = session.image
             }
@@ -198,8 +207,8 @@
                     restore_array = [];
                     index = -1;
 
-                    let canvasSizeX = canvas.width * 0.6 
-                    let canvasSizeY = canvas.height * 0.6
+                    let canvasSizeX = canvas.scrollWidth
+                    let canvasSizeY = canvas.scrollHeight
                     console.log(canvasSizeX + "und" + canvasSizeY)
                     let relativePositionX = canvasSizeX/originalImageX
                     let relativePositionY = canvasSizeY/originalImageY
@@ -305,9 +314,9 @@
                     initialImage = context.getImageData(0, 0, canvas.width, canvas.height)
                     restore_array = [];
                     index = -1;
-
-                    let canvasSizeX = canvas.width * 0.6 
-                    let canvasSizeY = canvas.height * 0.6
+                   
+                    let canvasSizeX = canvas.scrollWidth
+                    let canvasSizeY = canvas.scrollHeight
                     console.log(canvasSizeX + "und" + canvasSizeY)
                     let relativePositionX = canvasSizeX/originalImageX
                     let relativePositionY = canvasSizeY/originalImageY
@@ -357,7 +366,7 @@
 
     var kehrwertX = 0
     var kehrwertY = 0
-    
+
     var activeColor = "black";
 
     function change_color(element){
@@ -450,7 +459,7 @@
         evt.preventDefault();
         const touches = evt.changedTouches;
         for (let i = 0; i < touches.length; i++) {
-            const color = activeColor;
+            const color = activeColor
             let idx = ongoingTouchIndexById(touches[i].identifier);
             if (idx >= 0) {
             context.lineWidth = document.getElementById('pen_range').value;
@@ -485,7 +494,7 @@
 
     function drawLine(context, x1, y1, x2, y2) {
         context.beginPath();
-        context.strokeStyle = activeColor;
+        context.strokeStyle = activeColor
         context.lineWidth = document.getElementById('pen_range').value;
         context.lineJoin = "round";
         context.moveTo(x1, y1);
