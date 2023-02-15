@@ -112,12 +112,17 @@ input {
 }
 /* <-----  Canvas & Paintbar Section  -----> */
 .image_html_section {
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin-top: 5rem;
 }
+
+[data-value="has_joined"] {
+    display: flex;
+  }
+
 /* <-----  Canvas  -----> */
 canvas {
     border: 1px solid black;

@@ -32,7 +32,7 @@
         </div>
     <div id="div_users">
     </div>
-    <div class="image_html_section">
+    <div class="image_html_section" id="imageHtmlSection">
         <div class="paintbar">
             <!--Lösch-Funktion für alle erstellte Zeichnungen-->
             <div class="paintbarleft">
@@ -96,6 +96,8 @@
     })
 
 
+    var hasJoined = false;
+
     btnJoin.addEventListener("click", e =>{
 
     
@@ -143,7 +145,13 @@
         if (response.method === "join"){
             sessionId = response.session.sessionId
             let session = response.session
+            let newJoin = response.newJoin
 
+            if(newJoin){
+                hasJoined = true;
+                const imageHtmlSection = document.getElementById("imageHtmlSection")
+                imageHtmlSection.dataset.value = "has_joined"
+            }
         
             console.log(div_users)
                 //console.log(element.nutzername)
