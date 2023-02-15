@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://kit.fontawesome.com/afe490e8d5.js" crossorigin="anonymous"></script>
     
 
     <title>EP2023</title>
@@ -18,26 +19,25 @@
         </div>
         <div>
             <h1>EP2023</h1>
-            <!--<img src="Main_Prototype/public/images/1logo.png">-->
+            <img src="/Main_Prototype/public/images/logo.png">
         </div>
         <div class="headerright">
             <button id = "btnCreate">Session</button>
             <div class="upload-btn-wrapper">
-            <button class="file">Upload</button>
+            <button class="file"><i class="fa-solid fa-upload"></i></button>
             <input  type="file" id="image_input" accept="image/png, image/jpg">
             </div>
         </div>
     </div>
         <div class="session_tag" id="join_code">
         </div>
-    <div id="div_users">
-    </div>
-    <div class="image_html_section" id="imageHtmlSection">
+        <div id="div_users"></div>
+        <div class="image_html_section" id="imageHtmlSection">
         <div class="paintbar">
             <!--Lösch-Funktion für alle erstellte Zeichnungen-->
             <div class="paintbarleft">
-            <button onclick="javascript:undo();return false;" class="undoclear"></button>
-            <button onclick="javascript:clearArea();return false;" class="undoclear"></button>
+            <button onclick="javascript:undo();return false;" class="undoclear"><i class="fa-solid fa-rotate-left"></i></button>
+            <button onclick="javascript:clearArea();return false;" class="undoclear"><i class="fa-solid fa-trash-can"></i></button>
             </div>
             <div>
             <input type="range" min="1" max="30" id="pen_range" onInput="draw_with = this.value"> 
