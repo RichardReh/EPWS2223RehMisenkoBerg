@@ -39,8 +39,8 @@ input {
 }
 
 .logo{
-    height: 3rem;
-    width: 8rem;
+    display: flex;
+    max-height: 4rem;
 }
 
 .headerright{
