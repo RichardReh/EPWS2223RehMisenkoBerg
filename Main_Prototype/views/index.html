@@ -136,8 +136,25 @@
             let d = document.createElement("h2")
             d.textContent = "SessionID:  " + sessionId
             d.style.fontFamily = "Arial"
+            d.addEventListener("click", e =>{
+                var copyText = sessionId
+                    navigator.clipboard.writeText(copyText).then(() => {
+                    var copyNotification = document.createElement("h2")
+                    copyNotification.textContent = "copied!"
+                    copyNotification.style.fontFamily = "Arial"
+                    copyNotification.style.marginRight = "10rem"
+                    d.textContent = copyNotification.textContent
+                    setTimeout(function(){
+                        d.textContent = "SessionID:  " + sessionId
+                    }, 3000);
+                })
+            })
 
-            joincode.appendChild(d)
+            if (joincode.firstChild){
+                joincode.firstChild.textContent = ("SessionID:  " + sessionId)
+            } else {
+                joincode.appendChild(d)
+            }
 
         }
 
