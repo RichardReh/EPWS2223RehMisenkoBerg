@@ -5,6 +5,7 @@ html,body {
     background-repeat: no-repeat;
     background-size: cover;
     background-image: linear-gradient(180deg, #76f1f1 0%, #4c88bd 60%);
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 input {
@@ -24,18 +25,23 @@ input {
 
 }
 
+.headerbar button {
+    background: linear-gradient(180deg, #76F1F1 0%, #4C88BD 100%);
+    border: none;
+    color: black;
+    font-size: 13px;
+    align-items: center;
+    font-weight: 600;
+    border-radius: 8px;
+    width: 4rem;
+    height: 2rem;
+}
+
 .headerleft{
     display: flex;
     gap: 0.5rem;
     margin-left: 2rem;
     width: 30rem;
-}
-
-.headerbar h1{
-    display: flex;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-weight: lighter;
-    color: white; 
 }
 
 .logo{
@@ -51,7 +57,6 @@ input {
     justify-content: end;
 }
 
-/* <-----  Sessiontag  -----> */
 .session_tag{
     display: flex;
     align-items: center; 
@@ -61,7 +66,6 @@ input {
 
 .session_tag h2{
     text-align: center; 
-    color: white;
     font-size: 15px;
 }
 
@@ -78,18 +82,6 @@ input {
     top: 0;
     opacity: 0;
   }
-
-.headerbar button {
-    background: linear-gradient(180deg, #76F1F1 0%, #4C88BD 100%);
-    border: none;
-    color: black;
-    font-size: 13px;
-    align-items: center;
-    font-weight: 600;
-    border-radius: 8px;
-    width: 4rem;
-    height: 2rem;
-}
 
 .headerbar .file{
     color: black;
@@ -142,6 +134,22 @@ input {
 
 
 /* <-----  Canvas & Paintbar Section  -----> */
+.main{
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+#div_users{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 2rem;
+    margin-top: 5rem;
+    font-size: 20px;
+    font-weight: 700;
+}
+
 .image_html_section {
     display: none;
     flex-direction: column;

@@ -30,26 +30,27 @@
             </div>
         </div>
     </div>
+    <div class="main">
         <div id="div_users"></div>
         <div class="image_html_section" id="imageHtmlSection">
-        <div class="paintbar">
+            <div class="paintbar">
             <!--Lösch-Funktion für alle erstellte Zeichnungen-->
-            <div class="paintbarleft">
-            <button onclick="javascript:undo();return false;" class="undoclear"><i class="fa-solid fa-rotate-left"></i></button>
-            <button onclick="javascript:clearArea();return false;" class="undoclear"><i class="fa-solid fa-trash-can"></i></button>
-            </div>
-            <div>
-            <input type="range" min="2" max="30" id="pen_range" onInput="draw_with = this.value"> 
-            </div>
-            <div class="paintbarright">
-            <button onClick=change_color(this) class="colorChange" style="background: white;"></button>
-            <button onClick=change_color(this) class="colorChange" style="background: black;"></button>
-            <button onClick=change_color(this) class="colorChange" style="background: grey;"></button>    
-            <button onClick=change_color(this) class="colorChange"  style="background: red;"></button>
-            <button onClick=change_color(this) class="colorChange"  style="background: blue;"></button>
-            <button onClick=change_color(this) class="colorChange"  style="background: green;"></button>
-            <button onClick=change_color(this) class="colorChange" style="background: yellow;"></button>
-            </div>
+                <div class="paintbarleft">
+                <button onclick="javascript:undo();return false;" class="undoclear"><i class="fa-solid fa-rotate-left"></i></button>
+                <button onclick="javascript:clearArea();return false;" class="undoclear"><i class="fa-solid fa-trash-can"></i></button>
+                </div>
+                <div>
+                <input type="range" min="2" max="30" id="pen_range" onInput="draw_with = this.value"> 
+                </div>
+                <div class="paintbarright">
+                <button onClick=change_color(this) class="colorChange" style="background: white;"></button>
+                <button onClick=change_color(this) class="colorChange" style="background: black;"></button>
+                <button onClick=change_color(this) class="colorChange" style="background: grey;"></button>    
+                <button onClick=change_color(this) class="colorChange"  style="background: red;"></button>
+                <button onClick=change_color(this) class="colorChange"  style="background: blue;"></button>
+                <button onClick=change_color(this) class="colorChange"  style="background: green;"></button>
+                <button onClick=change_color(this) class="colorChange" style="background: yellow;"></button>
+                </div>
 
             <!--Farbauswahl für das Zeichnen-->
             <!--Color : <select id="selColor">
@@ -61,10 +62,10 @@
                 <option value="gray">gray</option>
                 <option value="white">white</option>
             </select>-->
-
-        </div>
+            </div>
         <canvas id="imageCanvas"></canvas>
         <!--<img src="" id="display_image"></img>-->
+        </div>
     </div>
 </body>
 <script>
@@ -179,8 +180,7 @@
             session.clients.forEach(c => {
                 const d = document.createElement("div")
                 d.textContent = c.nutzername
-                d.style.fontFamily = "Impact, Haettenschweiler"
-                d.style.fontSize = "xx-large"
+                d.style.fontFamily = "Arial"
                 div_users.appendChild(d)
             });
 
