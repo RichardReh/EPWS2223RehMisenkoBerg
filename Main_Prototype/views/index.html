@@ -5,44 +5,55 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://kit.fontawesome.com/afe490e8d5.js" crossorigin="anonymous"></script>
+    
+
     <title>EP2023</title>
 </head>
 <body>
-    <div class="headline">
-        <h1>EP2023</h1>
-    </div>
-    <div class="field_container">
-        <div class="create_button">
-            <button id = "btnCreate">Sitzung erstellen</button>
-        </div>
-        <div class="join_options">
+    <div class="headerbar">
+        <div class="headerleft">
             <input type = "text" placeholder="Nutzername" id = "txtNameId">
             <input type = "text" placeholder="SessionId" id = "txtSessionId">
-            <button id = "btnJoin">Sitzung beitretten</button>
+            <button id = "btnJoin">Join</button>
+            <button id = "btnCreate">New Session</button>
         </div>
-        <div class="join_code" id="join_code">
-
-        </div>
-    </div>
-    <div id="div_users">
-
-    </div>
-    <div class="image_html_section">
         <div>
+            <!--<h1>EP2023</h1>-->
+            <img class="logo" src="https://github.com/RichardReh/EPWS2122RehMisenkoBerg/blob/871b2b9cad744c482440f2cc1bb70d14ea95b9e4/Main_Prototype/public/images/logo.png?raw=true">
+        </div>
+        <div class="headerright">
+            <div class="session_tag" id="join_code"></div>
+            <div class="upload-btn-wrapper">
+            <button class="file"><i class="fa-solid fa-upload"></i></button>
+            <input  type="file" id="image_input" accept="image/png, image/jpg">
+            </div>
+        </div>
+    </div>
+    <div class="main" id="main">
+        <div id="div_users"></div>
+        <div class="image_html_section" id="imageHtmlSection">
+            <div class="paintbar">
             <!--Lösch-Funktion für alle erstellte Zeichnungen-->
-            <button onclick="javascript:clearArea();return false;">Clear</button>
-
-            <button onclick="javascript:undo();return false;">Undo</button>
-
-            <!--Linien Größen für das Zeichnen-->
-            Line width : <select id="selWidth">
-                <option value="10">10</option>
-                <option value="20" selected="selected">20</option>
-                <option value="30">30</option>
-            </select>
+                <div class="paintbarleft">
+                <button onclick="javascript:undo();return false;" class="undoclear"><i class="fa-solid fa-rotate-left"></i></button>
+                <button onclick="javascript:clearArea();return false;" class="undoclear"><i class="fa-solid fa-trash-can"></i></button>
+                </div>
+                <div>
+                <input type="range" min="2" max="30" id="pen_range" onInput="draw_with = this.value"> 
+                </div>
+                <div class="paintbarright">
+                <button onClick=change_color(this) class="colorChange" style="background: white;"></button>
+                <button onClick=change_color(this) class="colorChange" style="background: black;"></button>
+                <button onClick=change_color(this) class="colorChange" style="background: grey;"></button>    
+                <button onClick=change_color(this) class="colorChange"  style="background: red;"></button>
+                <button onClick=change_color(this) class="colorChange"  style="background: blue;"></button>
+                <button onClick=change_color(this) class="colorChange"  style="background: green;"></button>
+                <button onClick=change_color(this) class="colorChange" style="background: yellow;"></button>
+                </div>
 
             <!--Farbauswahl für das Zeichnen-->
-            Color : <select id="selColor">
+            <!--Color : <select id="selColor">
                 <option value="black">black</option>
                 <option value="blue" selected="selected">blue</option>
                 <option value="red">red</option>
@@ -50,13 +61,11 @@
                 <option value="yellow">yellow</option>
                 <option value="gray">gray</option>
                 <option value="white">white</option>
-            </select>
-
-        </div>
-        <input type="file" id="image_input" accept="image/png, image/jpg">
-
+            </select>-->
+            </div>
         <canvas id="imageCanvas"></canvas>
         <!--<img src="" id="display_image"></img>-->
+        </div>
     </div>
 </body>
 <script>
@@ -78,16 +87,16 @@
     const joincode = document.getElementById("join_code");
 
     //Button für die Erstellung einer Sitzung
-    btnCreate.addEventListener("click", e =>{
-
-        const payLoad = {
+    btnCreate.addEventListener("click", e =>{    
+            const payLoad = {
             "method": "create",
             "clientId": clientId
-        }
-
+            }
         ws.send(JSON.stringify(payLoad));
     })
 
+
+    var hasJoined = false;
 
     btnJoin.addEventListener("click", e =>{
 
@@ -128,15 +137,45 @@
             let d = document.createElement("h2")
             d.textContent = "SessionID:  " + sessionId
             d.style.fontFamily = "Arial"
+            d.addEventListener("click", e =>{
+                var copyText = sessionId
+                    navigator.clipboard.writeText(copyText).then(() => {
+                    var copyNotification = document.createElement("h2")
+                    copyNotification.textContent = "copied!"
+                    copyNotification.style.fontFamily = "Arial"
+                    copyNotification.style.marginRight = "10rem"
+                    d.textContent = copyNotification.textContent
+                    setTimeout(function(){
+                        d.textContent = "SessionID:  " + sessionId_for_image_send
+                    }, 1000);
+                })
+            })
 
-            joincode.appendChild(d)
+            if (joincode.firstChild){
+                joincode.firstChild.textContent = ("SessionID:  " + sessionId)
+            } else {
+                joincode.appendChild(d)
+            }
 
         }
 
         if (response.method === "join"){
             sessionId = response.session.sessionId
             let session = response.session
+            let newJoin = response.newJoin
 
+            if(!hasJoined){
+                var d = document.createElement("h3")
+                d.textContent = "In der Session: "
+                const div = document.getElementById("main")
+                div.prepend(d)
+            }
+
+            if(newJoin){
+                hasJoined = true;
+                const imageHtmlSection = document.getElementById("imageHtmlSection")
+                imageHtmlSection.dataset.value = "has_joined"
+            }
         
             console.log(div_users)
                 //console.log(element.nutzername)
@@ -148,8 +187,7 @@
             session.clients.forEach(c => {
                 const d = document.createElement("div")
                 d.textContent = c.nutzername
-                d.style.fontFamily = "Impact, Haettenschweiler"
-                d.style.fontSize = "xx-large"
+                d.style.fontFamily = "Arial"
                 div_users.appendChild(d)
             });
 
@@ -161,6 +199,15 @@
                     canvas.height = encodedImage.height;
                     var ctx = canvas.getContext('2d');
                     ctx.drawImage(encodedImage,0,0);
+                    originalImageX = encodedImage.width
+                    originalImageY = encodedImage.height
+                    let canvasSizeX = canvas.scrollWidth
+                    let canvasSizeY = canvas.scrollHeight
+                    console.log(canvasSizeX + "und" + canvasSizeY)
+                    let relativePositionX = canvasSizeX/originalImageX
+                    let relativePositionY = canvasSizeY/originalImageY
+                    kehrwertX = 1/relativePositionX
+                    kehrwertY = 1/relativePositionY
                 }
                 encodedImage.src = session.image
             }
@@ -177,6 +224,8 @@
                 var canvas = document.getElementById('imageCanvas');
                 canvas.width = encodedImage.width;
                 canvas.height = encodedImage.height;
+                originalImageX = encodedImage.width;
+                originalImageY = encodedImage.height;
                 var ctx = canvas.getContext('2d');
                 ctx.drawImage(encodedImage,0,0);
 
@@ -188,9 +237,19 @@
                     initialImage = context.getImageData(0, 0, canvas.width, canvas.height)
                     restore_array = [];
                     index = -1;
+
+                    let canvasSizeX = canvas.scrollWidth
+                    let canvasSizeY = canvas.scrollHeight
+                    console.log(canvasSizeX + "und" + canvasSizeY)
+                    let relativePositionX = canvasSizeX/originalImageX
+                    let relativePositionY = canvasSizeY/originalImageY
+                    kehrwertX = 1/relativePositionX
+                    kehrwertY = 1/relativePositionY
                 }
             }
             encodedImage.src = image
+
+            
 
             //console.log("DAS IST DAS ENKODIERTE BILD:  "+ encodedImage.src)
 
@@ -266,6 +325,9 @@
         var context = canvas.getContext('2d');
 
         var initialImage = ""
+        var originalImageX = 0
+        var originalImageY = 0
+
         let restore_array = [];
         let index = -1;
 
@@ -277,10 +339,20 @@
 
                     canvas.width = img.width;
                     canvas.height = img.height;
+                    originalImageX = img.width;
+                    originalImageY = img.height
                     context.drawImage(img,0,0);
                     initialImage = context.getImageData(0, 0, canvas.width, canvas.height)
                     restore_array = [];
                     index = -1;
+                   
+                    let canvasSizeX = canvas.scrollWidth
+                    let canvasSizeY = canvas.scrollHeight
+                    console.log(canvasSizeX + "und" + canvasSizeY)
+                    let relativePositionX = canvasSizeX/originalImageX
+                    let relativePositionY = canvasSizeY/originalImageY
+                    kehrwertX = 1/relativePositionX
+                    kehrwertY = 1/relativePositionY
                 }
             img.src = event.target.result;
             var sendableImage = event.target.result;
@@ -323,6 +395,15 @@
     var offsetX;
     var offsetY;
 
+    var kehrwertX = 0
+    var kehrwertY = 0
+
+    var activeColor = "black";
+
+    function change_color(element){
+        activeColor = element.style.background;
+    }
+
     function startup() {
         canvas.addEventListener('touchstart', handleStart);
         canvas.addEventListener('touchend', handleEnd);
@@ -336,7 +417,7 @@
 
         canvas.addEventListener('mousemove', (e) => {
             if (isDrawing) {
-            drawLine(context, x, y, e.offsetX, e.offsetY);
+            drawLine(context, x * kehrwertX, y * kehrwertY, e.offsetX * kehrwertX, e.offsetY * kehrwertY);
             x = e.offsetX;
             y = e.offsetY;
             }
@@ -344,7 +425,7 @@
 
         canvas.addEventListener('mouseup', (e) => {
             if (isDrawing) {
-            drawLine(context, x, y, e.offsetX, e.offsetY);
+            drawLine(context, x * kehrwertX, y * kehrwertY, e.offsetX * kehrwertX, e.offsetY * kehrwertY);
             x = 0;
             y = 0;
             isDrawing = false;
@@ -389,13 +470,13 @@
         evt.preventDefault();
         const touches = evt.changedTouches;
         for (let i = 0; i < touches.length; i++) {
-            const color = document.getElementById('selColor').value;
+            const color = activeColor
             const idx = ongoingTouchIndexById(touches[i].identifier);
             if (idx >= 0) {
             context.beginPath();
             context.moveTo(ongoingTouches[idx].clientX - offsetX, ongoingTouches[idx].clientY - offsetY);
             context.lineTo(touches[i].clientX - offsetX, touches[i].clientY - offsetY);
-            context.lineWidth = document.getElementById('selWidth').value;
+            context.lineWidth = document.getElementById('pen_range').value;
             context.strokeStyle = color;
             context.lineJoin = "round";
             context.closePath();
@@ -409,10 +490,10 @@
         evt.preventDefault();
         const touches = evt.changedTouches;
         for (let i = 0; i < touches.length; i++) {
-            const color = document.getElementById('selColor').value;
+            const color = activeColor
             let idx = ongoingTouchIndexById(touches[i].identifier);
             if (idx >= 0) {
-            context.lineWidth = document.getElementById('selWidth').value;
+            context.lineWidth = document.getElementById('pen_range').value;
             context.fillStyle = color;
             ongoingTouches.splice(idx, 1);  
             }
@@ -444,8 +525,8 @@
 
     function drawLine(context, x1, y1, x2, y2) {
         context.beginPath();
-        context.strokeStyle = document.getElementById('selColor').value;
-        context.lineWidth = document.getElementById('selWidth').value;
+        context.strokeStyle = activeColor
+        context.lineWidth = document.getElementById('pen_range').value;
         context.lineJoin = "round";
         context.moveTo(x1, y1);
         context.lineTo(x2, y2);

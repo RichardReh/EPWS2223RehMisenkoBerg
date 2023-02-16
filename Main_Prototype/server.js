@@ -75,11 +75,22 @@ wsServer.on("request", request => {
     
                 const payLoad = {
                     "method" : "join",
-                    "session" : session
+                    "session" : session,
+                    "newJoin" : false
+                }
+
+                const payLoad2 = {
+                    "method" : "join",
+                    "session" : session,
+                    "newJoin" : true
                 }
     
                 session.clients.forEach(c => {
-                    clients[c.clientId].connection.send(JSON.stringify(payLoad))
+                    if(c.clientId !== clientId){
+                        clients[c.clientId].connection.send(JSON.stringify(payLoad))
+                    } else {
+                        clients[c.clientId].connection.send(JSON.stringify(payLoad2))
+                    }
                 });
               }
         }
