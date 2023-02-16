@@ -146,7 +146,11 @@
                     copyNotification.style.marginRight = "10rem"
                     d.textContent = copyNotification.textContent
                     setTimeout(function(){
-                        d.textContent = "SessionID:  " + sessionId_for_image_send
+                        if(sessionId_for_image_send == ""){
+                            d.textContent = "SessionID:  " + sessionId
+                        } else {
+                            d.textContent = "SessionID:  " + sessionId_for_image_send
+                        }
                     }, 1000);
                 })
             })
