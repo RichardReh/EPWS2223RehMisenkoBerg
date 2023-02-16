@@ -30,7 +30,7 @@
             </div>
         </div>
     </div>
-    <div class="main">
+    <div class="main" id="main">
         <div id="div_users"></div>
         <div class="image_html_section" id="imageHtmlSection">
             <div class="paintbar">
@@ -163,6 +163,13 @@
             sessionId = response.session.sessionId
             let session = response.session
             let newJoin = response.newJoin
+
+            if(!hasJoined){
+                var d = document.createElement("h3")
+                d.textContent = "In der Session: "
+                const div = document.getElementById("main")
+                div.prepend(d)
+            }
 
             if(newJoin){
                 hasJoined = true;
