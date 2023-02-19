@@ -15,7 +15,7 @@ let clientId = null;
     const div_users = document.getElementById("div_users")
     const joincode = document.getElementById("join_code");
 
-    //Button für die Erstellung einer Sitzung
+    //Event für Button für die Erstellung einer Sitzung
     btnCreate.addEventListener("click", e =>{    
             const payLoad = {
             "method": "create",
@@ -26,7 +26,7 @@ let clientId = null;
 
 
     var hasJoined = false;
-
+    //Event für Button für das betreten einer Sitzung
     btnJoin.addEventListener("click", e =>{
 
     
@@ -52,8 +52,6 @@ let clientId = null;
         
         if(response.method === "connect"){
             clientId = response.clientId;
-            //Client Id ausgeben
-            console.log(clientId)
 
             clientId_for_undo_or_clear = clientId
         }
@@ -61,14 +59,14 @@ let clientId = null;
         if (response.method === "create"){
             sessionId = response.session.id
 
-            console.log("Das ist meine SessionId",sessionId)
+            //Anzeigen der Session ID auf dem Frontend
 
             let d = document.createElement("h2")
             d.textContent = "SessionID:  " + sessionId
             d.style.fontFamily = "Arial"
             d.addEventListener("click", e =>{
                 var copyText = sessionId
-                    navigator.clipboard.writeText(copyText).then(() => {
+                navigator.clipboard.writeText(copyText).then(() => {
                     var copyNotification = document.createElement("h2")
                     copyNotification.textContent = "copied!"
                     copyNotification.style.fontFamily = "Arial"
@@ -97,6 +95,8 @@ let clientId = null;
             let session = response.session
             let newJoin = response.newJoin
 
+            //Anzeigen der Nutzernamen auf dem Frontend
+
             if(!hasJoined){
                 var d = document.createElement("h3")
                 d.textContent = "In der Session: "
@@ -109,9 +109,6 @@ let clientId = null;
                 const imageHtmlSection = document.getElementById("imageHtmlSection")
                 imageHtmlSection.dataset.value = "has_joined"
             }
-        
-            console.log(div_users)
-                //console.log(element.nutzername)
 
             while(div_users.firstChild){
                 div_users.removeChild(div_users.firstChild)
@@ -124,6 +121,9 @@ let clientId = null;
                 div_users.appendChild(d)
             });
 
+            //Zeichnen des Bildes und anschließende Umrechnung der Koordinatendaten für das Zeichnen
+            //auf der korrekten Position
+
             if(session.image != ""){
                 const encodedImage = new Image()
                 encodedImage.onload = function() {
@@ -132,11 +132,11 @@ let clientId = null;
                     canvas.height = encodedImage.height;
                     var ctx = canvas.getContext('2d');
                     ctx.drawImage(encodedImage,0,0);
+
                     originalImageX = encodedImage.width
                     originalImageY = encodedImage.height
                     let canvasSizeX = canvas.scrollWidth
                     let canvasSizeY = canvas.scrollHeight
-                    console.log(canvasSizeX + "und" + canvasSizeY)
                     let relativePositionX = canvasSizeX/originalImageX
                     let relativePositionY = canvasSizeY/originalImageY
                     kehrwertX = 1/relativePositionX
@@ -150,7 +150,7 @@ let clientId = null;
             const image = response.image
             const newImage = response.newImage
 
-            //console.log("DAS IST DAS BILD:  "+ image)
+            //Zeichnen des Bildes und hinzufügen in das restore_array
 
             const encodedImage = new Image()
             encodedImage.onload = function() {
@@ -166,6 +166,8 @@ let clientId = null;
                 restore_array.push(imageData)
                 index += 1
 
+                //Anpassen der Zeichnungs-Koordinaten, wenn ein neues Bild mit neuer Auflösung hochgeladen wird
+
                 if(newImage){
                     initialImage = context.getImageData(0, 0, canvas.width, canvas.height)
                     restore_array = [];
@@ -173,7 +175,6 @@ let clientId = null;
 
                     let canvasSizeX = canvas.scrollWidth
                     let canvasSizeY = canvas.scrollHeight
-                    console.log(canvasSizeX + "und" + canvasSizeY)
                     let relativePositionX = canvasSizeX/originalImageX
                     let relativePositionY = canvasSizeY/originalImageY
                     kehrwertX = 1/relativePositionX
@@ -181,55 +182,27 @@ let clientId = null;
                 }
             }
             encodedImage.src = image
-
-            
-
-            //console.log("DAS IST DAS ENKODIERTE BILD:  "+ encodedImage.src)
-
         }
 
         if (response.method === "undoImage"){
+            //Wenn restore_array mehr als 1 Eintrag hat, soll das Bild einfach ,,gecleared" werden
+            //Ansonsten soll der letzte Eintrag aus dem restore_array geladen werden und index um 1 dekrementiert.
             if(index <= 0){
             restore_array = [];
             index = -1;
 
-            //var jpegUrl = ""
-            //const encodedImage = new Image()
-            //encodedImage.onload = function() {
-            //    var canvas = document.getElementById('imageCanvas');
-            //    canvas.width = encodedImage.width;
-            //    canvas.height = encodedImage.height;
-            //    var ctx = canvas.getContext('2d');
-            //    ctx.drawImage(encodedImage,0,0);
-            //    jpegUrl = canvas.toDataURL("image/jpeg");
-            //}
-            //encodedImage.src = initialImage
             context.putImageData(initialImage, 0 , 0)
 
             } else {
                 restore_array.pop();
                 index -= 1
                 context.putImageData(restore_array[index], 0, 0)
-                //var jpegUrl = canvas.toDataURL("image/jpeg");
             }
         }
 
         if (response.method === "clearImage"){
             if(initialImage != ""){
-            //    var jpegUrl = ""
-            //    const encodedImage = new Image()
-            //    encodedImage.onload = function() {
-            //        var canvas = document.getElementById('imageCanvas');
-            //        canvas.width = encodedImage.width;
-            //        canvas.height = encodedImage.height;
-            //        var ctx = canvas.getContext('2d');
-            //        ctx.drawImage(encodedImage,0,0);
-            //        jpegUrl = canvas.toDataURL("image/jpeg");
-                    //console.log(jpegUrl)
-            //    }
-            //    encodedImage.src = initialImage
-            context.putImageData(initialImage, 0 , 0)
-
+                context.putImageData(initialImage, 0 , 0)
                 restore_array = [];
                 index = -1;
             }
@@ -238,20 +211,11 @@ let clientId = null;
         if (response.method === "error"){
             console.log(response.message) 
         }
-
     } 
 
     // LOGIK FÜR DEN IMAGE UPLOAD
 
-    const image_input = document.querySelector("#image_input");
-    //var uploaded_image = "";
-
-    //image_input.addEventListener("change", function(){
-    //    const reader = new FileReader();
-    //    reader.addEventListener("load", () => {
-    //        uploaded_image = reader.result;
-    //        document.querySelector("#display_image").src = uploaded_image
-
+        const image_input = document.querySelector("#image_input");
         var imageLoader = document.getElementById('image_input');
         imageLoader.addEventListener('change', handleImage, false);
         var canvas = document.getElementById('imageCanvas');
@@ -263,6 +227,8 @@ let clientId = null;
 
         let restore_array = [];
         let index = -1;
+
+        //Funktion um das Bild von der Festplatte zu hochzuladen und anschließende Umrechnung der Zeichnungskoordinaten
 
         function handleImage(e){
             var reader = new FileReader();
@@ -281,7 +247,6 @@ let clientId = null;
                    
                     let canvasSizeX = canvas.scrollWidth
                     let canvasSizeY = canvas.scrollHeight
-                    console.log(canvasSizeX + "und" + canvasSizeY)
                     let relativePositionX = canvasSizeX/originalImageX
                     let relativePositionY = canvasSizeY/originalImageY
                     kehrwertX = 1/relativePositionX
@@ -303,24 +268,8 @@ let clientId = null;
             }
             reader.readAsDataURL(e.target.files[0]);     
         }
-                
 
-    //        if(sessionId_for_image_send != ""){
-    //            const payLoad = {
-    //            "method": "upload_image",
-    //            "clientId": clientId,
-    //            "sessionId": sessionId_for_image_send,
-    //            "image" : uploaded_image,
-    //        }
-
-    //        ws.send(JSON.stringify(payLoad));
-    //        }
-
-    //    });
-    //    reader.readAsDataURL(this.files[0]);
-    //});
-
-    //Canvas Funktionen
+    //Funktionen für das Zeichnen auf dem HTML-Canvas
 
     let isDrawing = false;
     let x = 0;
@@ -350,6 +299,7 @@ let clientId = null;
 
         canvas.addEventListener('mousemove', (e) => {
             if (isDrawing) {
+            //Anpassung der Zeichnungskoordinaten durch vorher errechneten Korrekturfaktor (kehrwertX und kehrwertY)
             drawLine(context, x * kehrwertX, y * kehrwertY, e.offsetX * kehrwertX, e.offsetY * kehrwertY);
             x = e.offsetX;
             y = e.offsetY;
@@ -358,6 +308,7 @@ let clientId = null;
 
         canvas.addEventListener('mouseup', (e) => {
             if (isDrawing) {
+            //Anpassung der Zeichnungskoordinaten durch vorher errechneten Korrekturfaktor (kehrwertX und kehrwertY)
             drawLine(context, x * kehrwertX, y * kehrwertY, e.offsetX * kehrwertX, e.offsetY * kehrwertY);
             x = 0;
             y = 0;
@@ -380,11 +331,10 @@ let clientId = null;
             }
 
             ws.send(JSON.stringify(payLoad));
-
-            console.log(restore_array)
         });
     }
 
+    //Sobald das DOM geladen wurde, sollen dem Canvas die Events für das Zeichnen angefügt werden.
     document.addEventListener("DOMContentLoaded", startup);
 
     const ongoingTouches = [];
@@ -471,19 +421,6 @@ let clientId = null;
 
         if(initialImage != ""){
 
-            //var jpegUrl = ""
-            //const encodedImage = new Image()
-            //encodedImage.onload = function() {
-            //    var canvas = document.getElementById('imageCanvas');
-            //    canvas.width = encodedImage.width;
-            //    canvas.height = encodedImage.height;
-            //    var ctx = canvas.getContext('2d');
-            //    ctx.drawImage(encodedImage,0,0);
-            //    jpegUrl = canvas.toDataURL("image/jpeg");
-            //    //console.log(jpegUrl)
-            //}
-            //encodedImage.src = initialImage
-
             context.putImageData(initialImage, 0, 0)
 
             restore_array = [];
@@ -504,19 +441,6 @@ let clientId = null;
 
             restore_array = [];
             index = -1;
-            
-            //var jpegUrl = ""
-            //const encodedImage = new Image()
-            //encodedImage.onload = function() {
-            //    var canvas = document.getElementById('imageCanvas');
-            //    canvas.width = encodedImage.width;
-            //    canvas.height = encodedImage.height;
-            //    var ctx = canvas.getContext('2d');
-            //    ctx.drawImage(encodedImage,0,0);
-            //    console.log(restore_array)
-            //    //jpegUrl = canvas.toDataURL("image/jpeg");
-            //}
-            //encodedImage.src = initialImage
 
             context.putImageData(initialImage, 0, 0)
 
@@ -530,10 +454,8 @@ let clientId = null;
         } else {
             index -= 1
             restore_array.pop();
-            console.log(restore_array)
             context.putImageData(restore_array[index], 0, 0)
-            //var jpegUrl = canvas.toDataURL("image/jpeg");
-
+        
             const payLoad = {
                 "method" : "undo",
                 "sessionId" : sessionId_for_image_send,
