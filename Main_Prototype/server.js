@@ -11,6 +11,7 @@ const clients = {};
 const sessions = {};
 
 const wsServer = new websocketServer({
+    //Es wurde extra ein so hoher Wert genommen, damit Bilder mit eventuell sehr hoher Dateigröße akzeptiert werden. 
     "httpServer": httpServer,
     "maxReceivedFrameSize": 9999999,
     "maxReceivedMessageSize": 10 * 1024 * 1024,
@@ -23,10 +24,6 @@ wsServer.on("request", request => {
     connection.on("close", () => console.log("closed!"))
     connection.on("message", message => {
         const result = JSON.parse(message.utf8Data)
-       
-        //Client Message empfangen
-        //console.log(result)
-
 
         //eine Sitzung erstellen mit einer neuen Sitzungs ID
         if (result.method === "create"){ 
@@ -38,7 +35,6 @@ wsServer.on("request", request => {
                 "image" : ""
             }
 
-            console.log("Neue Session ",sessions[sessionId]);
 
             const payLoad = {
                 "method": "create",
@@ -102,8 +98,6 @@ wsServer.on("request", request => {
             const newImage = result.newImage
             let session = null
 
-            //console.log(image)
-
             const payLoad = {
                 "method" : "get_image",
                 "image" : image,
@@ -111,20 +105,13 @@ wsServer.on("request", request => {
             }
 
             session = sessions[sessionId]
-
             session.image = image
-            
-            console.log(clientId)
-
-            var i = 0
 
             session.clients.forEach(c => {
                 if(c.clientId !== clientId){
-                    i += 1
                     clients[c.clientId].connection.send(JSON.stringify(payLoad))
                 }
             })
-            console.log("I von upload_image ist:  "+i)
         }
 
         if (result.method === "undo"){
@@ -136,15 +123,11 @@ wsServer.on("request", request => {
                 "method" : "undoImage",
             }
 
-            var i = 0
-
             session.clients.forEach(c => {
                 if(c.clientId !== clientId){
-                    i += 1
                     clients[c.clientId].connection.send(JSON.stringify(payLoad))
                 }
             })
-            console.log("i ist: " + i)
         }
 
         if (result.method === "clear"){
@@ -152,29 +135,21 @@ wsServer.on("request", request => {
             const clientId = result.clientId
             const session = sessions[sessionId]
 
-            console.log("CLIENT ID: " + clientId)
-            console.log("SESSION ID: " + sessionId)
-
             const payLoad = {
                 "method" : "clearImage",
             }
 
-            var i = 0
-
             session.clients.forEach(c => {
                 if(c.clientId !== clientId){
-                    i += 1
                     clients[c.clientId].connection.send(JSON.stringify(payLoad))
                 }
             })
-            console.log("i ist: " + i)
-
         }
 
 
     })
 
-    //neue client ID erstellen
+    //neue client ID erstellen, sobald ein Client sich verbindet und anschließend diese an ihn senden.
     const clientId = guid();
     clients[clientId] = {
         "connection": connection
@@ -185,9 +160,10 @@ wsServer.on("request", request => {
         "clientId": clientId
     }
 
-    //Verbindung an den Server zurücksenden
     connection.send(JSON.stringify(payLoad))
 })
+
+//Funktion für die Erstellung einer ID, egal ob für Clients oder Sessions.
 
 function S4() {
     return (((1+Math.random())*0x10000)|0).toString(16).substring(1); 

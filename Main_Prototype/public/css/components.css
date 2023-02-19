@@ -1,0 +1,385 @@
+/* Headerbar
+############################################################################ */
+.headerbar{
+    display: flex;
+    height: var(--xxl);
+    background-color: var(--dark);
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.headerbar button {
+    background: var(--brandcolor);
+    border: none;
+    color: var(--dark);
+    font-size: var(--fs-m);
+    line-height: var(--xxxs);
+    align-items: center;
+    font-weight: var(--fw-bold);
+    border-radius: var(--br-m);
+    width: var(--xxl);
+    height: var(--m);
+}
+
+.headerleft{
+    display: flex;
+    gap: var(--xxxxxs);
+    margin-left: var(--m);
+    width: 30rem;
+}
+
+.logo{
+    display: flex;
+    max-height: var(--xxl);
+}
+
+.headerright{
+    display: flex;
+    gap: var(--m);
+    margin-right: var(--m);
+    width: 30rem;
+    justify-content: end;
+}
+
+.upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+  }
+
+  .upload-btn-wrapper input[type=file] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+  }
+
+.headerbar .file{
+    color: var(--dark);
+    font-size: var(--icon-size-xl);
+}
+
+.session_tag{
+    display: flex;
+    align-items: center; 
+    color: var(--light);
+    height: var(--m);
+}
+
+.session_tag h2{
+    text-align: center; 
+    font-size: var(--fs-m);
+    line-height: normal;
+}
+
+
+/* Paintbar
+############################################################################ */
+.paintbar{
+    display: flex;
+    width: 60vw;
+    height: var(--l);
+    background: var(--shadow);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.paintbar button{
+    color: var(--light);
+    font-size: var(--icon-size-l);
+    cursor: pointer;
+}
+
+.paintbarleft{
+    display: flex;
+    margin-left: var(--xxs);
+    gap: var(--xxxxxs);
+}
+
+.paintbarright{
+    display: flex;
+    margin-right: var(--xxs);
+    gap: var(--xxxxxs);
+}
+
+.undoclear{
+    width: var(--m);
+    height: var(--m);
+    border: none;
+    border-radius: var(--br-l);
+    background: var(--dark);
+}
+
+.colorChange{
+    width: var(--m);
+    height: var(--m);
+    border: none;
+    border-radius: var(--br-l);
+}
+
+
+/* Users in Session
+############################################################################ */
+.main{
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+.main h3{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: var(--m);
+    margin-top: var(--xxxl);
+}
+
+#div_users{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: var(--xl);
+    left: var(--m);
+    margin-top: var(--xxl);
+    font-size: var(--fs-l);
+    font-weight: var(--fw-bold);
+    width: 10rem;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+/* Canvas
+############################################################################ */
+.image_html_section {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: var(--xxxl);
+}
+
+[data-value="has_joined"] {
+    display: flex;
+  }
+
+canvas {
+    border: 1px solid var(--dark);
+    background-position: center;
+    overflow: auto;
+    width: 60vw; 
+}
+
+
+/* Input Range Style
+############################################################################ */
+/*********** Baseline, reset styles ***********/
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    width: var(--xxxxl);
+  }
+  
+  /* Removes default focus */
+  input[type="range"]:focus {
+    outline: none;
+  }
+  
+
+  /******** Chrome, Safari, Opera and Edge Chromium styles ********/
+  /* slider track */
+  input[type="range"]::-webkit-slider-runnable-track {
+    background-color: var(--brandcolor-dark);
+    border-radius: var(--br-xl);
+    height: var(--xxxxxs);
+  }
+  
+  /* slider thumb */
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    margin-top: -8px; /* Centers thumb on the track */
+    background-color: var(--brandcolor-light);
+    border-radius: var(--br-m);
+    height: var(--s);
+    width: var(--xxxs);
+  }
+  
+  
+  /*********** Firefox styles ***********/
+  /* slider track */
+  input[type="range"]::-moz-range-track {
+    background-color: var(--brandcolor-dark);
+    border-radius: var(--br-xl);
+    height: var(--xxxxxs);
+  }
+  
+  /* slider thumb */
+  input[type="range"]::-moz-range-thumb {
+    background-color: var(--brandcolor-light);
+    border: none; /*Removes extra border that FF applies*/
+    border-radius: var(--br-m);
+    height: var(--s);
+    width: var(--xxxs);
+  }
+  
+
+  @media only screen and (max-width: 1000px){
+    .headerbar{
+        display: flex;
+        min-height: var(--xxxxl);
+        background-color: var(--dark);
+        align-items: center;
+        flex-wrap: wrap;
+        flex-direction: row-reverse;
+    }
+    
+    .headerright{
+        margin-right: 4.5rem;
+    }
+    
+    .main h3{
+        left: 42.5%;
+        top: 85%;
+    }
+    
+    #div_users{
+        left: 42.5%;
+        top: 96%;
+    }
+  }
+
+
+  /* Media Queries
+############################################################################ */
+  @media only screen and (max-width: 820px){
+    .undoclear{
+        width: 3vw;
+        height: 3vw;
+        border-radius: 1vw;
+        
+    }
+    
+    .colorChange{
+        width: 3vw;
+        height: 3vw;
+        border-radius: 1vw;
+    }
+
+    .paintbar button{  
+        font-size: 1.5vw;
+    }
+  }
+
+  @media only screen and (max-width: 680px){
+    .undoclear{
+        width: 20px;
+        height: 20px;
+        border-radius: 5px;
+        
+    }
+    
+    .colorChange{
+        width: 20px;
+        height: 20px;
+        border-radius: 5px;
+    }
+
+    .paintbar button{  
+        font-size: 10px;
+    }
+
+    .main h3{
+        font-size: 14px;
+    }
+    
+    #div_users{
+        font-size: 10px;
+    }
+
+    .paintbar{
+        height: 3.5rem;
+        flex-wrap: wrap;
+        align-content: space-around;
+        justify-content: space-evenly;
+    }
+
+    .paintbarleft{
+        margin-left: 0;
+    }
+
+    .paintbarright{
+        margin-right: 0;
+    }
+
+    input[type="range"] {
+        width: 7rem;
+      }
+      
+    input {
+        width: var(--xxxl);
+        height: var(--s);
+        font-size: 12px;
+    }
+  
+    .headerbar button {
+        font-size: 10px;
+        line-height: var(--xxxxs);
+        border-radius: var(--br-s);
+        width: var(--xl);
+        height: var(--s);
+    }
+    
+    .headerleft{
+        position: absolute;
+        top: 1.5rem;
+        right: 0.5rem;
+        width: 18rem;
+    }
+    
+    .logo{
+        position: absolute;
+        top: 0.5rem;
+        left: 0.5rem;
+        height: 9.5vw;
+    }
+    
+    .headerright{
+        position: absolute;
+        margin-right: 0;
+        top: 4rem;
+        right: 1rem;
+        width: 24rem; 
+        gap: var(--xxxs);
+    }
+    
+    .headerbar .file{
+        font-size: var(--icon-size-l);
+    }
+
+    .session_tag h2{
+        font-size: 12px;
+    }
+
+    .main h3{
+        left: 38.5%;
+        top: 85%;
+    }
+    
+    #div_users{
+        left: 38.5%;
+        top: 98%;
+    }
+  }
+
+@media (max-width: 840px), screen and (orientation: landscape) {
+    html,body {
+        background-attachment: fixed;
+    }
+    
+#div_users{
+        max-height: 34vh 
+    }
+  }

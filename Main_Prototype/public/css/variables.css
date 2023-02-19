@@ -1,0 +1,46 @@
+:root {
+    /* Sizes
+############################################################################ */
+    --bfs:  0.5rem;
+    --xxxxxs:  calc(var(--bfs) * 1.00);
+    --xxxxs:   calc(var(--bfs) * 1.25);
+    --xxxs:    calc(var(--bfs) * 1.60);
+    --xxs:    calc(var(--bfs) * 2.00);
+    --xs:    calc(var(--bfs) * 2.50);
+    --s:   calc(var(--bfs) * 3.00);
+    --m:   calc(var(--bfs) * 4.00);
+    --l:   calc(var(--bfs) * 5.00);
+    --xl:   calc(var(--bfs) * 6.00);
+    --xxl: calc(var(--bfs) * 8.00);
+    --xxxl: calc(var(--bfs) * 10.00);
+    --xxxxl: calc(var(--bfs) * 16.00);
+
+    /* Colors
+############################################################################ */
+    --brandcolor: linear-gradient(180deg, #76f1f1 0%, #4c88bd 60%);
+    --brandcolor-dark: #4c88bd;
+    --brandcolor-light: #76f1f1;
+    --shadow: rgba(0, 0, 0, 0.75);
+    --dark: black;
+    --light: white;
+
+    /* Border-Radius
+############################################################################ */
+    --br-s: calc(var(--bfs) * 0.626);
+    --br-m: var(--xxxxxs);
+    --br-l: var(--xxxxs);
+    --br-xl: var(--xxs);
+
+    /* Fonts
+############################################################################ */
+    --ff: 'Arial', 'Helvetica', sans-serif;
+    --fw-normal: 400;
+    --fw-bold: 600;
+    --fs-m: 13px;
+    --fs-l: 16px;
+
+    /* Icons
+############################################################################ */
+    --icon-size-l: var(--fs-l);
+    --icon-size-xl: 18px;
+}
