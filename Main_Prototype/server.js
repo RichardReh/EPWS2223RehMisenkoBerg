@@ -67,8 +67,6 @@ wsServer.on("request", request => {
                     "nutzername" : nutzername
                 })
     
-                console.log(session)
-    
                 const payLoad = {
                     "method" : "join",
                     "session" : session,
