@@ -6,7 +6,7 @@ let clientId = null;
     var sessionId_for_image_send = ""
     var clientId_for_undo_or_clear = ""
 
-    let ws = new WebSocket("ws://localhost:8003")
+    let ws = new WebSocket("ws://arv-ep2223.onrender.com/:8003")
 
     const btnJoin = document.getElementById("btnJoin");
     const txtSessionId = document.getElementById("txtSessionId");
