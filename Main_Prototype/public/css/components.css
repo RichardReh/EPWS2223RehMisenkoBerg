@@ -168,6 +168,7 @@ canvas {
     background-position: center;
     overflow: auto;
     width: 60vw; 
+    margin-bottom: var(--xxxl);
 }
 
 
