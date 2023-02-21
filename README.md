@@ -8,7 +8,7 @@ Das Ziel wäre es ein System zu konzeptionieren und zu entwickeln, welches eine 
 
 Dieses Projekt hat insofern eine gesellschaftliche Relevanz, dass das Arbeiten innerhalb von größeren Gruppen in Präsenz erleichtert bzw. verbessert wird. Es wird die Effizienz des Gruppenfortschritt gesteigert, da alle Gruppenmitglieder parallel an einem Bild sitzen und sich nebenbei persönlich austauschen können. Neben der Anzeige der Bilder soll dann der Austausch in der Gruppe durch eine Möglichkeit zum Annotieren erleichtert/verbessert werden und die Änderungen sollen sofort für alle ebenfalls sichtbar sein.
 
-Die ganze Dokumentation des Projektes kann im Wiki gelesen werden: https://github.com/RichardReh/EPWS2223RehMisenkoBerg/wiki/Dokumentation-des-Entwicklungsprojektes-2022-23---Reh,-Misenko,-Berg
+[Die ganze Dokumentation des Projektes kann im Wiki gelesen werden](https://github.com/RichardReh/EPWS2223RehMisenkoBerg/wiki/Dokumentation-des-Entwicklungsprojektes-2022-23---Reh,-Misenko,-Berg)
 
 Quellen:
 
